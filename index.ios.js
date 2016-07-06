@@ -8,9 +8,10 @@ import {
   StyleSheet,
   Text,
   StatusBar,
-  View, 
-  TouchableHighlight
+  View
 } from 'react-native';
+
+var Button = require('react-native-button');
 
 var MapExample = React.createClass({
   mixins: [Mapbox.Mixin],
@@ -51,7 +52,7 @@ var MapExample = React.createClass({
   onOfflineMaxAllowedMapboxTiles(hitLimit) {
     console.log(hitLimit);
   },
-  setMarkerPress(){
+  _setMarkerPress(){
     //reset all markers
     this.removeAllAnnotations(mapRef);
 
@@ -60,8 +61,8 @@ var MapExample = React.createClass({
       this.addAnnotations(mapRef, [{
         coordinates: [location.latitude, location.longitude],
         type: 'point', 
-        title: 'Park Me Here', 
-        subtitle: 'Parking spot',
+        title: "You're Parked", 
+        subtitle: 'You parked here at ' + Date.now(),
         id: 'parking1'
       }])
     )
@@ -70,9 +71,6 @@ var MapExample = React.createClass({
     StatusBar.setHidden(false);
     return (
       <View style={styles.container}>
-        <TouchableHighlight onPress={this.setMarkerPress}>
-          <Text>Add Position</Text>
-        </TouchableHighlight>
         <Mapbox
           style={styles.container}
           direction={0}
@@ -97,6 +95,14 @@ var MapExample = React.createClass({
           onTap={this.onTap}
           onOfflineProgressDidChange={this.onOfflineProgressDidChange}
           onOfflineMaxAllowedMapboxTiles={this.onOfflineMaxAllowedMapboxTiles} />
+        <Button
+          containerStyle={styles.buttonContainer}
+          style={styles.button}
+          styleDisabled={{color: 'red'}}
+          onPress={this._setMarkerPress}
+        >
+          park
+        </Button>
       </View>
     );
   }
@@ -105,7 +111,16 @@ var MapExample = React.createClass({
 var styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 40
+    marginTop: 12
+  }, 
+  button: {
+    fontSize: 24, 
+    color: 'white',
+    marginTop: 30,    
+  }, 
+  buttonContainer: {
+    height: 100, 
+    backgroundColor: 'green'
   }
 });
 
