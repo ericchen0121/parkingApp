@@ -57,15 +57,19 @@ var MapExample = React.createClass({
     this.removeAllAnnotations(mapRef);
 
     // get coordinates and add a marker
-    this.getCenterCoordinateZoomLevel(mapRef, (location) =>
+    this.getCenterCoordinateZoomLevel(mapRef, (location) => {
+      var time = new Date;
       this.addAnnotations(mapRef, [{
         coordinates: [location.latitude, location.longitude],
         type: 'point', 
-        title: "You're Parked", 
-        subtitle: 'You parked here at ' + Date.now(),
+        title: "parkd", 
+        subtitle: "on " + time.toLocaleString(),
         id: 'parking1'
       }])
-    )
+    })
+  },
+  _setMarkerCallback(){
+
   },
   render() {
     StatusBar.setHidden(false);
@@ -82,7 +86,7 @@ var MapExample = React.createClass({
           logoIsHidden={true}
           accessToken={'pk.eyJ1IjoiZXJpY2NoZW4wMTIxIiwiYSI6ImNpbjR1ZTk5YjBjOHh1cmtrcjE1aHhpd20ifQ.Enx5PU9X5DZgFUs2vohngA'}
           styleURL="mapbox://styles/mapbox/satellite-v9"
-          userTrackingMode={this.userTrackingMode.followWithHeading}
+          userTrackingMode={this.userTrackingMode.follow}
           centerCoordinate={this.state.center}
           zoomLevel={this.state.zoom}
           onRegionChange={this.onRegionChange}
@@ -120,7 +124,12 @@ var styles = StyleSheet.create({
   }, 
   buttonContainer: {
     height: 100, 
-    backgroundColor: 'green'
+    backgroundColor: '#48d1cc',
+    position: 'absolute', 
+    bottom: 10, 
+    left: 10, 
+    right: 10, 
+    borderRadius: 10
   }
 });
 
