@@ -8,7 +8,8 @@ import {
   StyleSheet,
   Text,
   StatusBar,
-  View
+  View, 
+  Image
 } from 'react-native';
 
 var Button = require('react-native-button');
@@ -24,7 +25,8 @@ var Main = React.createClass({
       },
       zoom: 16,
       annotations: [], 
-      parked: false
+      parked: false, 
+      photoPath: undefined
     };
   },
   onRegionChange(location) {
@@ -118,12 +120,32 @@ var Main = React.createClass({
       )
     }
   },
+  _renderPhotoTaken() {
+    if(this.state.photoPath) {
+      return ( 
+        <View style={styles.buttonPhotoTakenContainer}>
+          <Image
+            style={styles.photo}
+            source={{uri: this.state.photoPath }}
+          />
+        </View>
+      )
+    } else {
+      return (
+        <View></View>
+      )
+    }
+  },
   _takePhoto(){
     this.props.navigator.push({
-      // if user doesn't have a name, select an option
       title: "Remember Parkd Spot", 
-      component: Photo
+      component: Photo,
+      passProps: {callback: this.callbackPhoto}
     });
+  },
+  callbackPhoto(path){
+    console.log('CALLBACK PATH', path)
+    this.setState({photoPath: path})
   },
   render() {
     StatusBar.setHidden(false);
@@ -155,6 +177,7 @@ var Main = React.createClass({
           onOfflineMaxAllowedMapboxTiles={this.onOfflineMaxAllowedMapboxTiles} />
         {this._renderParkButton()}
         {this._renderPhotoButton()}
+        {this._renderPhotoTaken()}
       </View>
     );
   }
@@ -168,10 +191,10 @@ var styles = StyleSheet.create({
   button: {
     fontSize: 24, 
     color: 'white',
-    marginTop: 30,    
+    marginTop: 22,    
   }, 
   buttonCancelPark: {
-    height: 100, 
+    height: 80, 
     backgroundColor: '#f08080',
     position: 'absolute', 
     bottom: 10, 
@@ -180,7 +203,7 @@ var styles = StyleSheet.create({
     borderRadius: 10
   }, 
   buttonToPark: {
-    height: 100, 
+    height: 80, 
     backgroundColor: '#48d1cc',
     position: 'absolute', 
     bottom: 10, 
@@ -201,6 +224,19 @@ var styles = StyleSheet.create({
     fontSize: 18, 
     color: 'white',
     marginTop: 10
+  }, 
+  buttonPhotoTakenContainer: {
+    height: 50, 
+    backgroundColor: 'black',
+    position: 'absolute', 
+    top: 60, 
+    left: 80, 
+    right: 280,
+    borderRadius: 5
+  },
+  photo: {
+    height: 50, 
+    width: 50
   }
 });
 

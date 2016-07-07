@@ -16,7 +16,9 @@ class Photo extends Component {
             this.camera = cam;
           }}
           style={styles.preview}
-          aspect={Camera.constants.Aspect.fill}>
+          aspect={Camera.constants.Aspect.fill}
+          captureTarget={Camera.constants.CaptureTarget.disk}
+          >
           <Text style={styles.capture} onPress={this.takePicture.bind(this)}>[CAPTURE]</Text>
         </Camera>
       </View>
@@ -25,7 +27,12 @@ class Photo extends Component {
 
   takePicture() {
     this.camera.capture()
-      .then((data) => console.log(data))
+      .then((data) => {
+        console.log('DATA ---', data);
+        this.props.callback(data.path);
+        console.log(data.path);
+        this.props.navigator.pop();
+      })
       .catch(err => console.error(err));
   }
 }
