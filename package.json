@@ -9,6 +9,7 @@
     "react": "15.2.0",
     "react-native": "^0.28.0",
     "react-native-button": "^1.6.0",
+    "react-native-camera": "git+https://github.com/lwansbrough/react-native-camera.git",
     "react-native-mapbox-gl": "^4.1.1"
   }
 }
