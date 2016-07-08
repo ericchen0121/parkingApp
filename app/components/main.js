@@ -104,33 +104,23 @@ var Main = React.createClass({
     }
   },
   _renderPhotoButton() {
-    if(this.state.parked) {
-      return (
-        <View style={styles.cameraButton}>
-          <Icon onPress={this._takePhoto} name="camera" size={40} color="#808080" />
-        </View>
-      )
-    } else {
-      return (
-        <View></View>
-      )
-    }
+    if(!this.state.parked) return;
+    return (
+      <View style={styles.cameraButton}>
+        <Icon onPress={this._takePhoto} name="camera" size={40} color="#808080" />
+      </View>
+    )
   },
   _renderPhotoTaken() {
-    if(this.state.photoPath) {
-      return ( 
-        <View style={styles.buttonPhotoTakenContainer}>
-          <Image
-            style={styles.photo}
-            source={{uri: this.state.photoPath }}
-          />
-        </View>
-      )
-    } else {
-      return (
-        <View></View>
-      )
-    }
+    if(!this.state.photoPath) return;
+    return ( 
+      <View style={styles.buttonPhotoTakenContainer}>
+        <Image
+          style={styles.photo}
+          source={{uri: this.state.photoPath }}
+        />
+      </View>
+    )
   },
   _takePhoto(){
     this.props.navigator.push({
