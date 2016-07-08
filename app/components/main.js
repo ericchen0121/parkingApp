@@ -10,6 +10,7 @@ import {
   StatusBar,
   View, 
   Image, 
+  TextInput,
   TouchableWithoutFeedback
 } from 'react-native';
 
@@ -29,7 +30,8 @@ var Main = React.createClass({
       zoom: 16,
       annotations: [], 
       parked: false, 
-      photoPath: undefined
+      photoPath: undefined, 
+      notes: ''
     };
   },
   _setPark(){
@@ -50,8 +52,8 @@ var Main = React.createClass({
   _removePark(){
      //reset all markers
     this.removeAllAnnotations(mapRef);
-    this.setState({parked: false, photoPath: undefined});
-    this.setZoomLevelAnimated(mapRef, 16)
+    this.setState({parked: false, photoPath: undefined, notes: ''});
+    this.setZoomLevelAnimated(mapRef, 16);
   },
   _parkButton(){
     if(this.state.parked) {
@@ -131,6 +133,19 @@ var Main = React.createClass({
         this.setCenterCoordinateZoomLevelAnimated(mapRef, position.coords.latitude, position.coords.longitude, 16);
       })
   },
+  _notes() {
+    if(!this.state.parked) return;
+    return (
+      <View style={styles.notes} >
+        <TextInput 
+          style={{height: 40}}
+          onChangeText= {(notes) => this.setState({notes})}
+          value={this.state.notes}
+          placeholder='  parking meter, garage, street address'
+        />
+      </View>
+    )
+  },
   render() {
     StatusBar.setHidden(false);
     return (
@@ -163,6 +178,7 @@ var Main = React.createClass({
         {this._photoButton()}
         {this._photoTaken()}
         {this._centerMapButton()}
+        {this._notes()}
       </View>
     );
   }
@@ -204,18 +220,17 @@ var styles = StyleSheet.create({
     left: 20, 
     borderRadius: 5
   }, 
-  buttonPhotoTakenContainer: {
-    height: 50, 
-    width: 50,
-    backgroundColor: 'rgba(52,52,52,0)',
+  buttonPhotoTakenContainer: {  
     position: 'absolute', 
     top: 140, 
-    left: 20, 
-    borderRadius: 5
+    left: 20    
   },
   photo: {
     height: 50, 
-    width: 50
+    width: 50, 
+    borderRadius: 5, 
+    padding: 5, 
+    backgroundColor: 'red'
   },
   centerMapButton: {
     backgroundColor: 'rgba(52,52,52,0)',
@@ -228,6 +243,13 @@ var styles = StyleSheet.create({
     position: 'absolute', 
     bottom: 146, 
     left: 16.5,
+  }, 
+  notes: {
+    position: 'absolute', 
+    top: 80,
+    left: 70,
+    right: 10, 
+    backgroundColor: 'white'
   }
 });
 

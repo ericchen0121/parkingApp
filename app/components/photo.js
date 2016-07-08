@@ -4,7 +4,7 @@ import {
   StyleSheet,
   Text,
   View, 
-  TouchableWithoutFeedback
+  TouchableOpacity
 } from 'react-native';
 
 var Button = require('react-native-button');
@@ -26,8 +26,13 @@ class Photo extends Component {
           aspect={Camera.constants.Aspect.fill}
           captureTarget={Camera.constants.CaptureTarget.disk}
           >
-          <Icon name='circle' size={60} color='white' iconStyle={styles.snap} onPress={this.takePicture.bind(this)} />
+          
         </Camera>
+        <View style={styles.captureContainer}>
+          <TouchableOpacity>
+            <Icon name='circle' size={60} color='white' onPress={this.takePicture.bind(this)} />
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -63,17 +68,15 @@ const styles = StyleSheet.create({
     marginTop: 10
   }, 
   captureContainer: {
-    height: 80, 
-    backgroundColor: '#98fb98',
+    height: 60, 
+    backgroundColor: 'rgba(52,52,52,0)',
     position: 'absolute', 
-    bottom: 10, 
+    bottom: 50, 
     left: 10, 
     right: 10,
-    borderRadius: 10
+    borderRadius: 10,
+    alignItems: 'center'
   }, 
-  snap: {
-    marginTop: -10
-  }
 });
 
 module.exports = Photo

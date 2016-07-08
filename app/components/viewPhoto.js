@@ -15,7 +15,7 @@ class ViewPhoto extends Component {
 	}
 	render(){
 		return (
-			<View style={styles.buttonPhotoTakenContainer}>
+			<View style={styles.photoTakenContainer}>
 	      <TouchableWithoutFeedback onPress={this._goBack.bind(this)}>
 	      	<Image
 		        style={styles.photo}
@@ -32,6 +32,9 @@ var styles = StyleSheet.create({
 	photo: {
 		height: Dimensions.get('window').height,
 		width: Dimensions.get('window').width
+	}, 
+	photoTakenContainer: {
+		marginTop: 60
 	}
 });
 
