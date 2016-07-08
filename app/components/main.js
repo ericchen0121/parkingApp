@@ -9,12 +9,14 @@ import {
   Text,
   StatusBar,
   View, 
-  Image
+  Image, 
+  TouchableWithoutFeedback
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 var Button = require('react-native-button');
-var Photo = require('./photo')
+var Photo = require('./photo');
+var ViewPhoto = require('./viewPhoto.js');
 
 var Main = React.createClass({
   mixins: [Mapbox.Mixin],
@@ -29,33 +31,6 @@ var Main = React.createClass({
       parked: false, 
       photoPath: undefined
     };
-  },
-  onRegionChange(location) {
-    this.setState({ currentZoom: location.zoom });
-  },
-  onRegionWillChange(location) {
-    console.log(location);
-  },
-  onUpdateUserLocation(location) {
-    console.log(location);
-  },
-  onOpenAnnotation(annotation) {
-    console.log(annotation);
-  },
-  onRightAnnotationTapped(e) {
-    console.log(e);
-  },
-  onLongPress(location) {
-    console.log('long pressed', location);
-  },
-  onTap(location) {
-    console.log('tapped', location);
-  },
-  onOfflineProgressDidChange(progress) {
-    console.log(progress);
-  },
-  onOfflineMaxAllowedMapboxTiles(hitLimit) {
-    console.log(hitLimit);
   },
   _setPark(){
     this.setState({parked: true});
@@ -115,12 +90,20 @@ var Main = React.createClass({
     if(!this.state.photoPath) return;
     return ( 
       <View style={styles.buttonPhotoTakenContainer}>
-        <Image
-          style={styles.photo}
-          source={{uri: this.state.photoPath }}
-        />
+        <TouchableWithoutFeedback onPress={this._viewPhoto}>
+          <Image
+            style={styles.photo}
+            source={{uri: this.state.photoPath }}
+          />
+        </TouchableWithoutFeedback>
       </View>
     )
+  },
+  _viewPhoto() {
+    this.props.navigator.push({ 
+      component: ViewPhoto,
+      passProps: {photoPath: this.state.photoPath}
+    });
   },
   _takePhoto(){
     this.props.navigator.push({
