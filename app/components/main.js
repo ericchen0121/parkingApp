@@ -45,7 +45,6 @@ var Main = React.createClass({
         subtitle: "on " + time.toLocaleString(),
         id: 'parking1'
       }])
-      // this.selectAnnotationAnimated(mapRef, 'parking1')
     })
   },
   _removePark(){
@@ -60,10 +59,9 @@ var Main = React.createClass({
         <Button
           containerStyle={styles.buttonCancelPark}
           style={styles.button}
-          styleDisabled={{color: 'red'}}
           onPress={this._removePark}
         >
-          cancel park
+          cancel
         </Button>
       )
     } else {
@@ -71,10 +69,9 @@ var Main = React.createClass({
         <Button
           containerStyle={styles.buttonToPark}
           style={styles.button}
-          styleDisabled={{color: 'red'}}
           onPress={this._setPark}
         >
-          park
+          parkit
         </Button>
       )
     }
@@ -108,7 +105,7 @@ var Main = React.createClass({
   },
   _takePhoto(){
     this.props.navigator.push({
-      title: "Remember Parkd Spot", 
+      title: "parkit photo", 
       component: Photo,
       passProps: {callback: this.callbackPhoto}
     });
@@ -118,8 +115,13 @@ var Main = React.createClass({
   },
   _centerMapButton() {
     return (
-      <View style={styles.centerMapButton}>
-        <Icon onPress={this._centerMap} name="dot-circle-o" size={40} color="#808080" />
+      <View>
+        <View style={styles.centerMapButtonStack}>
+          <Icon name="circle" size={48} color="white" />
+        </View>
+        <View style={styles.centerMapButton}>
+          <Icon onPress={this._centerMap} name="dot-circle-o" size={40} color="#48d1cc" />
+        </View>
       </View>
     )
   },
@@ -216,13 +218,17 @@ var styles = StyleSheet.create({
     width: 50
   },
   centerMapButton: {
-    height: 50, 
     backgroundColor: 'rgba(52,52,52,0)',
     position: 'absolute', 
     bottom: 150, 
     left: 20, 
-    borderRadius: 5
   }, 
+  centerMapButtonStack: {
+    backgroundColor: 'rgba(52,52,52,0)',
+    position: 'absolute', 
+    bottom: 146, 
+    left: 16.5,
+  }
 });
 
 module.exports = Main;

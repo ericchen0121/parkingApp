@@ -3,13 +3,18 @@ import {
   Dimensions,
   StyleSheet,
   Text,
-  View
+  View, 
+  TouchableWithoutFeedback
 } from 'react-native';
 
 var Button = require('react-native-button');
 import Camera from 'react-native-camera';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 class Photo extends Component {
+  // Move camera button: 
+  // https://github.com/lwansbrough/react-native-camera/blob/master/Example/Example.js
+  // 
   render() {
     return (
       <View style={styles.container}>
@@ -21,14 +26,7 @@ class Photo extends Component {
           aspect={Camera.constants.Aspect.fill}
           captureTarget={Camera.constants.CaptureTarget.disk}
           >
-          <Button
-            containerStyle={styles.captureContainer}
-            style={styles.button}
-            styleDisabled={{color: 'red'}}
-            onPress={this.takePicture.bind(this)}
-          >
-            photo
-          </Button>
+          <Icon name='circle' size={60} color='white' iconStyle={styles.snap} onPress={this.takePicture.bind(this)} />
         </Camera>
       </View>
     );
@@ -56,7 +54,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
     height: Dimensions.get('window').height,
-    width: Dimensions.get('window').width
+    width: Dimensions.get('window').width, 
+    backgroundColor: 'rgba(52,52,52,0)'
   },
   capture: {
     fontSize: 18, 
@@ -71,6 +70,9 @@ const styles = StyleSheet.create({
     left: 10, 
     right: 10,
     borderRadius: 10
+  }, 
+  snap: {
+    marginTop: -10
   }
 });
 

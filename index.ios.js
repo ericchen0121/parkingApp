@@ -20,9 +20,11 @@ class Parking extends Component {
   render() {
     return (
       <NavigatorIOS
+        barTintColor='#48d1cc'
+        titleTextColor= 'white'
         style={styles.container}
         initialRoute = {{
-          title: 'Parkd', 
+          title: "parkit", 
           component: Main
         }} />
     );
