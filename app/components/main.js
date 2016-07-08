@@ -45,6 +45,7 @@ var Main = React.createClass({
         subtitle: "on " + time.toLocaleString(),
         id: 'parking1'
       }])
+      // this.selectAnnotationAnimated(mapRef, 'parking1')
     })
   },
   _removePark(){
@@ -53,7 +54,7 @@ var Main = React.createClass({
     this.setState({parked: false, photoPath: undefined});
     this.setZoomLevelAnimated(mapRef, 16)
   },
-  _renderParkButton(){
+  _parkButton(){
     if(this.state.parked) {
       return (
         <Button
@@ -78,7 +79,7 @@ var Main = React.createClass({
       )
     }
   },
-  _renderPhotoButton() {
+  _photoButton() {
     if(!this.state.parked) return;
     return (
       <View style={styles.cameraButton}>
@@ -86,7 +87,7 @@ var Main = React.createClass({
       </View>
     )
   },
-  _renderPhotoTaken() {
+  _photoTaken() {
     if(!this.state.photoPath) return;
     return ( 
       <View style={styles.buttonPhotoTakenContainer}>
@@ -114,6 +115,19 @@ var Main = React.createClass({
   },
   callbackPhoto(path){
     this.setState({photoPath: path})
+  },
+  _centerMapButton() {
+    return (
+      <View style={styles.centerMapButton}>
+        <Icon onPress={this._centerMap} name="dot-circle-o" size={40} color="#808080" />
+      </View>
+    )
+  },
+  _centerMap() {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        this.setCenterCoordinateZoomLevelAnimated(mapRef, position.coords.latitude, position.coords.longitude, 16);
+      })
   },
   render() {
     StatusBar.setHidden(false);
@@ -143,9 +157,10 @@ var Main = React.createClass({
           onTap={this.onTap}
           onOfflineProgressDidChange={this.onOfflineProgressDidChange}
           onOfflineMaxAllowedMapboxTiles={this.onOfflineMaxAllowedMapboxTiles} />
-        {this._renderParkButton()}
-        {this._renderPhotoButton()}
-        {this._renderPhotoTaken()}
+        {this._parkButton()}
+        {this._photoButton()}
+        {this._photoTaken()}
+        {this._centerMapButton()}
       </View>
     );
   }
@@ -199,7 +214,15 @@ var styles = StyleSheet.create({
   photo: {
     height: 50, 
     width: 50
-  }
+  },
+  centerMapButton: {
+    height: 50, 
+    backgroundColor: 'rgba(52,52,52,0)',
+    position: 'absolute', 
+    bottom: 150, 
+    left: 20, 
+    borderRadius: 5
+  }, 
 });
 
 module.exports = Main;
