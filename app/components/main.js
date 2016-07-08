@@ -12,6 +12,7 @@ import {
   Image
 } from 'react-native';
 
+import Icon from 'react-native-vector-icons/FontAwesome';
 var Button = require('react-native-button');
 var Photo = require('./photo')
 
@@ -74,7 +75,7 @@ var Main = React.createClass({
   _removePark(){
      //reset all markers
     this.removeAllAnnotations(mapRef);
-    this.setState({parked: false});
+    this.setState({parked: false, photoPath: undefined});
     this.setZoomLevelAnimated(mapRef, 16)
   },
   _renderParkButton(){
@@ -105,14 +106,9 @@ var Main = React.createClass({
   _renderPhotoButton() {
     if(this.state.parked) {
       return (
-        <Button
-          containerStyle={styles.buttonPhotoContainer}
-          style={styles.buttonPhoto}
-          styleDisabled={{color: 'red'}}
-          onPress={this._takePhoto}
-        >
-          photo
-        </Button>
+        <View style={styles.cameraButton}>
+          <Icon onPress={this._takePhoto} name="camera" size={40} color="#808080" />
+        </View>
       )
     } else {
       return (
@@ -144,7 +140,6 @@ var Main = React.createClass({
     });
   },
   callbackPhoto(path){
-    console.log('CALLBACK PATH', path)
     this.setState({photoPath: path})
   },
   render() {
@@ -211,27 +206,21 @@ var styles = StyleSheet.create({
     right: 10, 
     borderRadius: 10
   }, 
-  buttonPhotoContainer: {
+  cameraButton: {
     height: 50, 
-    backgroundColor: 'black',
+    backgroundColor: 'rgba(52,52,52,0)',
     position: 'absolute', 
-    top: 60, 
-    left: 10, 
-    right: 330,
+    top: 80, 
+    left: 20, 
     borderRadius: 5
-  }, 
-  buttonPhoto: {
-    fontSize: 18, 
-    color: 'white',
-    marginTop: 10
   }, 
   buttonPhotoTakenContainer: {
     height: 50, 
-    backgroundColor: 'black',
+    width: 50,
+    backgroundColor: 'rgba(52,52,52,0)',
     position: 'absolute', 
-    top: 60, 
-    left: 80, 
-    right: 280,
+    top: 140, 
+    left: 20, 
     borderRadius: 5
   },
   photo: {

@@ -5,6 +5,8 @@ import {
   Text,
   View
 } from 'react-native';
+
+var Button = require('react-native-button');
 import Camera from 'react-native-camera';
 
 class Photo extends Component {
@@ -19,7 +21,14 @@ class Photo extends Component {
           aspect={Camera.constants.Aspect.fill}
           captureTarget={Camera.constants.CaptureTarget.disk}
           >
-          <Text style={styles.capture} onPress={this.takePicture.bind(this)}>[CAPTURE]</Text>
+          <Button
+            containerStyle={styles.captureContainer}
+            style={styles.button}
+            styleDisabled={{color: 'red'}}
+            onPress={this.takePicture.bind(this)}
+          >
+            photo
+          </Button>
         </Camera>
       </View>
     );
@@ -28,9 +37,10 @@ class Photo extends Component {
   takePicture() {
     this.camera.capture()
       .then((data) => {
-        console.log('DATA ---', data);
+        // send photo path back to the original screen with callback
+        // http://stackoverflow.com/questions/29463592/react-native-pass-properties-on-navigator-pop
+        // 
         this.props.callback(data.path);
-        console.log(data.path);
         this.props.navigator.pop();
       })
       .catch(err => console.error(err));
@@ -49,12 +59,18 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width
   },
   capture: {
-    flex: 0,
-    backgroundColor: '#fff',
-    borderRadius: 5,
-    color: '#000',
-    padding: 10,
-    margin: 40
+    fontSize: 18, 
+    color: 'white',
+    marginTop: 10
+  }, 
+  captureContainer: {
+    height: 80, 
+    backgroundColor: '#98fb98',
+    position: 'absolute', 
+    bottom: 10, 
+    left: 10, 
+    right: 10,
+    borderRadius: 10
   }
 });
 
