@@ -82,7 +82,7 @@ var Main = React.createClass({
     if(!this.state.parked) return;
     return (
       <View style={styles.cameraButton}>
-        <Icon onPress={this._takePhoto} name="camera" size={40} color="#808080" />
+        <Icon onPress={this._takePhoto} name="camera" size={40} color="#48d1cc" />
       </View>
     )
   },
@@ -100,14 +100,13 @@ var Main = React.createClass({
     )
   },
   _viewPhoto() {
-    this.props.navigator.push({ 
+    this.props.navigator.push({
       component: ViewPhoto,
       passProps: {photoPath: this.state.photoPath}
     });
   },
   _takePhoto(){
-    this.props.navigator.push({
-      title: "parkit photo", 
+    this.props.navigator.push({ 
       component: Photo,
       passProps: {callback: this.callbackPhoto}
     });
@@ -119,10 +118,10 @@ var Main = React.createClass({
     return (
       <View>
         <View style={styles.centerMapButtonStack}>
-          <Icon name="circle" size={48} color="white" />
+          <Icon name="circle" size={60} color="white" />
         </View>
         <View style={styles.centerMapButton}>
-          <Icon onPress={this._centerMap} name="dot-circle-o" size={40} color="#48d1cc" />
+          <Icon onPress={this._centerMap} name="dot-circle-o" size={52} color="#48d1cc" />
         </View>
       </View>
     )
@@ -139,7 +138,7 @@ var Main = React.createClass({
       <View style={styles.notes} >
         <TextInput 
           style={{height: 40}}
-          onChangeText= {(notes) => this.setState({notes})}
+          onChangeText= {(notes) => this.setState({notes: notes})}
           value={this.state.notes}
           placeholder='  parking meter, garage, street address'
         />
@@ -216,21 +215,19 @@ var styles = StyleSheet.create({
     height: 50, 
     backgroundColor: 'rgba(52,52,52,0)',
     position: 'absolute', 
-    top: 80, 
+    top: 30, 
     left: 20, 
     borderRadius: 5
   }, 
   buttonPhotoTakenContainer: {  
     position: 'absolute', 
-    top: 140, 
+    top: 80, 
     left: 20    
   },
   photo: {
-    height: 50, 
-    width: 50, 
-    borderRadius: 5, 
-    padding: 5, 
-    backgroundColor: 'red'
+    height: 46, 
+    width: 46, 
+    borderRadius: 5
   },
   centerMapButton: {
     backgroundColor: 'rgba(52,52,52,0)',
@@ -246,7 +243,7 @@ var styles = StyleSheet.create({
   }, 
   notes: {
     position: 'absolute', 
-    top: 80,
+    top: 30,
     left: 70,
     right: 10, 
     backgroundColor: 'white'

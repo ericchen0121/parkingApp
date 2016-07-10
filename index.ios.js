@@ -20,6 +20,7 @@ class Parking extends Component {
   render() {
     return (
       <NavigatorIOS
+        navigationBarHidden={true}
         barTintColor='#48d1cc'
         titleTextColor= 'white'
         style={styles.container}

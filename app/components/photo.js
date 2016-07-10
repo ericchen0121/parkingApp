@@ -30,7 +30,7 @@ class Photo extends Component {
         </Camera>
         <View style={styles.captureContainer}>
           <TouchableOpacity>
-            <Icon name='circle' size={60} color='white' onPress={this.takePicture.bind(this)} />
+            <Icon name='circle' size={80} color='#48d1cc' onPress={this.takePicture.bind(this)} />
           </TouchableOpacity>
         </View>
       </View>
