@@ -25,10 +25,6 @@ var Main = React.createClass({
   mixins: [Mapbox.Mixin],
 
   componentDidMount() {
-    store
-      .get('parking1')
-      .then(parking1 => console.log('GOT PREVIOUS PARKING!', parking1))
-      .catch(console.log('no previous parking!'))
   },
 
   getInitialState() {
