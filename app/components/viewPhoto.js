@@ -8,9 +8,11 @@ import {
   TouchableWithoutFeedback
 } from 'react-native';
 
+// This ViewPhoto component renders a photo with the ability to click on 
+// the photo to return to the previous screen
+// 
 class ViewPhoto extends Component {
 	_goBack() {
-		console.log('go back')
 		this.props.navigator.pop();
 	}
 	render(){

@@ -3,6 +3,8 @@
 import React, { Component } from 'react';
 var Mapbox = require('react-native-mapbox-gl');
 var mapRef = 'mapRef';
+var store = require('react-native-simple-store');
+
 import {
   AppRegistry,
   StyleSheet,
@@ -21,6 +23,12 @@ var ViewPhoto = require('./viewPhoto.js');
 
 var Main = React.createClass({
   mixins: [Mapbox.Mixin],
+  componentDidMount() {
+    store
+      .get('parking1')
+      .then(parking1 => console.log('GOT PREVIOUS PARKING!', parking1))
+      .catch(console.log('no previous parking!'))
+  },
   getInitialState() {
     return {
       center: {
@@ -31,29 +39,56 @@ var Main = React.createClass({
       annotations: [], 
       parked: false, 
       photoPath: undefined, 
-      notes: ''
+      notes: '', 
+      time: undefined
     };
   },
   _setPark(){
-    this.setState({parked: true});
-    this.setZoomLevelAnimated(mapRef, 17)
-    // get coordinates and add a marker
+    
+    this.setZoomLevelAnimated(mapRef, 17);
+    // get location and add a marker to the map
     this.getCenterCoordinateZoomLevel(mapRef, (location) => {
-      var time = new Date;
-      this.addAnnotations(mapRef, [{
-        coordinates: [location.latitude, location.longitude],
-        type: 'point', 
-        title: "parkd", 
-        subtitle: "on " + time.toLocaleString(),
-        id: 'parking1'
-      }])
+      if(location) {
+        this.setState({parked: true});
+        this.setState({time: new Date});
+        this.addAnnotations(mapRef, [{
+          coordinates: [location.latitude, location.longitude],
+          type: 'point', 
+          title: "parkit", 
+          subtitle: "on " + this.state.time.toLocaleString(),
+          id: 'parking1'
+        }])
+
+        // persist location
+        store.save('current', { 
+          time: this.state.time, 
+          latitude: location.latitude,
+          longitude: location.latitude
+        })
+      } else {
+        console.log('location not set') 
+      }
     })
+
+    // save key in local storage
+
   },
-  _removePark(){
+  _cancelPark(){
      //reset all markers
     this.removeAllAnnotations(mapRef);
     this.setState({parked: false, photoPath: undefined, notes: ''});
     this.setZoomLevelAnimated(mapRef, 16);
+
+    this._storeToPrevious();   
+  },
+  // persist location to storage
+  _storeToPrevious() {
+    store
+      .get('current')
+      .then(current => {store.save('previous', current) })
+      .then(() => store.delete('current'))
+      .then(() => store.get('previous'))  
+      .then(previous => console.log(previous))
   },
   _parkButton(){
     if(this.state.parked) {
@@ -61,7 +96,7 @@ var Main = React.createClass({
         <Button
           containerStyle={styles.buttonCancelPark}
           style={styles.button}
-          onPress={this._removePark}
+          onPress={this._cancelPark}
         >
           cancel
         </Button>
@@ -112,7 +147,10 @@ var Main = React.createClass({
     });
   },
   callbackPhoto(path){
-    this.setState({photoPath: path})
+    this.setState({photoPath: path});
+    
+    // update storage 
+    store.update('current', {photoPath: path});
   },
   _centerMapButton() {
     return (
@@ -138,7 +176,10 @@ var Main = React.createClass({
       <View style={styles.notes} >
         <TextInput 
           style={{height: 40}}
-          onChangeText= {(notes) => this.setState({notes: notes})}
+          onChangeText= {(notes) => {
+            this.setState({notes: notes})
+            store.update('current', {notes: notes})
+          }}
           value={this.state.notes}
           placeholder='  parking meter, garage, street address'
         />
