@@ -98,6 +98,14 @@ var Main = React.createClass({
       })
   },
 
+  _storeLocationPhoto(path) {
+    store.update('current', {photoPath: path});
+  },
+
+  _storeLocationNotes(notes) {
+    store.update('current', {notes: notes})
+  },
+
   _renderParkButton(){
     if(this.state.parked) {
       return (
@@ -134,7 +142,7 @@ var Main = React.createClass({
     if(!this.state.photoPath) return;
     return ( 
       <View style={styles.buttonPhotoTakenContainer}>
-        <TouchableWithoutFeedback onPress={this._viewPhoto}>
+        <TouchableWithoutFeedback onPress={this._gotoViewPhoto}>
           <Image
             style={styles.photo}
             source={{uri: this.state.photoPath }}
@@ -144,7 +152,7 @@ var Main = React.createClass({
     )
   },
 
-  _viewPhoto() {
+  _gotoViewPhoto() {
     this.props.navigator.push({
       component: ViewPhoto,
       passProps: {photoPath: this.state.photoPath}
@@ -160,9 +168,7 @@ var Main = React.createClass({
 
   callbackPhoto(path){
     this.setState({photoPath: path});
-    
-    // update persistence location with photo
-    store.update('current', {photoPath: path});
+    this._storeLocationPhoto(path);
   },
 
   _renderCenterMapButton() {
@@ -192,8 +198,8 @@ var Main = React.createClass({
         <TextInput 
           style={{height: 40}}
           onChangeText= {(notes) => {
-            this.setState({notes: notes})
-            store.update('current', {notes: notes})
+            this.setState({notes: notes});
+            this._storeLocationNotes(notes);
           }}
           value={this.state.notes}
           placeholder='  parking meter, garage, street address'
