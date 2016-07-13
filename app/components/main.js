@@ -24,27 +24,102 @@ var ViewPhoto = require('./viewPhoto.js');
 var Main = React.createClass({
   mixins: [Mapbox.Mixin],
 
+//------------------
+// LIFECYCLE
+//------------------
+  componentWillMount() {
+    this._setStateCenterCoordinates()
+  },
   componentDidMount() {
   },
-
   getInitialState() {
     return {
+      // this.state.center should be overridden by this._setStateCenterCoordinates()
       center: {
         latitude: 0,
         longitude: 0
       },
-      zoom: 16,
+      zoom: 15,
       annotations: [], 
       parked: false, 
       photoPath: undefined, 
       notes: '', 
-      time: undefined
+      time: undefined, 
+      mapStyle: this.mapStyles.streets
     };
   },
+  
+  _setCurrentPosition() {
+    store
+      .get('current')
+      .then(current => {
+        if(current) {
+          console.log('CURRENT POSITION IS', current)
+          this.setCenterCoordinateZoomLevelAnimated(mapRef, current.latitude, current.longitude, 17)
+        } else{
+          console.log('NOTHING, BABY')
+        }
+      })
+  },
 
+  
+
+//------------------
+// STORAGE
+//------------------
+  _storeLocationPrevious() {
+    store
+      .get('current')
+      .then(current => {store.save('previous', current) })
+      .then(() => store.delete('current'))
+      .then(() => store.get('previous'))  
+      .then(previous => console.log('DEBUG: ', previous)) // debug
+  },
+
+  _storeLocationDetails(location) {
+     store.save('current', { 
+        time: this.state.time, 
+        latitude: location.latitude,
+        longitude: location.longitude
+      })
+  },
+
+  _storeLocationPhoto(path) {
+    store.update('current', {photoPath: path});
+  },
+
+  _storeLocationNotes(notes) {
+    store.update('current', {notes: notes})
+  },
+
+//------------------
+// PARKING
+//------------------
+  _renderParkButton(){
+    if(this.state.parked) {
+      return (
+        <Button
+          containerStyle={styles.buttonCancelPark}
+          style={styles.button}
+          onPress={this._cancelPark}
+        >
+          cancel
+        </Button>
+      )
+    } else {
+      return (
+        <Button
+          containerStyle={styles.buttonToPark}
+          style={styles.button}
+          onPress={this._setPark}
+        >
+          parkit
+        </Button>
+      )
+    }
+  },
   _setPark(){
-    
-    this.setZoomLevelAnimated(mapRef, 17);
+    this.setZoomLevelAnimated(mapRef, 16);
     // get location and add a marker to the map
     this.getCenterCoordinateZoomLevel(mapRef, (location) => {
       if(location) {
@@ -71,61 +146,13 @@ var Main = React.createClass({
      //reset all markers
     this.removeAllAnnotations(mapRef);
     this.setState({parked: false, photoPath: undefined, notes: ''});
-    this.setZoomLevelAnimated(mapRef, 16);
+    this.setZoomLevelAnimated(mapRef, 15);
 
     this._storeLocationPrevious();   
   },
-
-  // persist location to storage
-  _storeLocationPrevious() {
-    store
-      .get('current')
-      .then(current => {store.save('previous', current) })
-      .then(() => store.delete('current'))
-      .then(() => store.get('previous'))  
-      .then(previous => console.log(previous)) // debug
-  },
-
-  _storeLocationDetails(location) {
-     store.save('current', { 
-        time: this.state.time, 
-        latitude: location.latitude,
-        longitude: location.latitude
-      })
-  },
-
-  _storeLocationPhoto(path) {
-    store.update('current', {photoPath: path});
-  },
-
-  _storeLocationNotes(notes) {
-    store.update('current', {notes: notes})
-  },
-
-  _renderParkButton(){
-    if(this.state.parked) {
-      return (
-        <Button
-          containerStyle={styles.buttonCancelPark}
-          style={styles.button}
-          onPress={this._cancelPark}
-        >
-          cancel
-        </Button>
-      )
-    } else {
-      return (
-        <Button
-          containerStyle={styles.buttonToPark}
-          style={styles.button}
-          onPress={this._setPark}
-        >
-          parkit
-        </Button>
-      )
-    }
-  },
-
+//------------------
+// PHOTO
+//------------------
   _renderPhotoButton() {
     if(!this.state.parked) return;
     return (
@@ -167,6 +194,9 @@ var Main = React.createClass({
     this._storeLocationPhoto(path);
   },
 
+//------------------
+// CENTERING 
+//------------------
   _renderCenterMapButton() {
     return (
       <View>
@@ -181,12 +211,28 @@ var Main = React.createClass({
   },
 
   _centerMap() {
+    console.log('CENTERING MAP')
     navigator.geolocation.getCurrentPosition(
       (position) => {
         this.setCenterCoordinateZoomLevelAnimated(mapRef, position.coords.latitude, position.coords.longitude, 16);
       })
   },
+  _setStateCenterCoordinates() {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        this.setState({
+          center: {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+          }
+        })
+      }
+    )
+  },
 
+//------------------
+// NOTES
+//------------------
   _notes() {
     if(!this.state.parked) return;
     return (
@@ -203,7 +249,29 @@ var Main = React.createClass({
       </View>
     )
   },
+//------------------
+// HISTORY
+//------------------
+  _renderHistoryButton() {
+    return (
+      <View style={styles.historyButton}>
+        <Icon onPress={this._gotoHistoryLocation} name="history" size={40} color="#48d1cc" />
+      </View>
+    )
+  },
+  _gotoHistoryLocation() {
+    store
+      .get('previous')
+      .then(previous => {
+        console.log("PREVIOUS COORDS...", previous['latitude'].toFixed(5));
+        // this.setCenterCoordinateZoomLevelAnimated(mapRef, 35.68829, 139.77492, 14)
+        this.setCenterCoordinateZoomLevelAnimated(mapRef, previous['latitude'], previous['longitude'], 14);    
+      })
+  },
 
+//------------------
+// RENDER
+//------------------
   render() {
     StatusBar.setHidden(false);
     return (
@@ -218,8 +286,8 @@ var Main = React.createClass({
           ref={mapRef}
           logoIsHidden={true}
           accessToken={'pk.eyJ1IjoiZXJpY2NoZW4wMTIxIiwiYSI6ImNpbjR1ZTk5YjBjOHh1cmtrcjE1aHhpd20ifQ.Enx5PU9X5DZgFUs2vohngA'}
-          styleURL={this.mapStyles.streets}
-          userTrackingMode={this.userTrackingMode.follow}
+          styleURL={this.state.mapStyle}
+          userTrackingMode={this.userTrackingMode.none}
           centerCoordinate={this.state.center}
           zoomLevel={this.state.zoom}
           onRegionChange={this.onRegionChange}
@@ -237,6 +305,7 @@ var Main = React.createClass({
         {this._renderPhotoTaken()}
         {this._renderCenterMapButton()}
         {this._notes()}
+        {this._renderHistoryButton()}
       </View>
     );
   }
@@ -288,6 +357,14 @@ var styles = StyleSheet.create({
     width: 46, 
     borderRadius: 5
   },
+  historyButton: {
+    height: 50, 
+    backgroundColor: 'rgba(52,52,52,0)',
+    position: 'absolute', 
+    bottom: 220, 
+    left: 22, 
+    borderRadius: 5
+  }, 
   centerMapButton: {
     backgroundColor: 'rgba(52,52,52,0)',
     position: 'absolute', 
