@@ -78,7 +78,7 @@ var Main = React.createClass({
 
   _storeLocationDetails(location) {
      store.save('current', { 
-        time: this.state.time, 
+        time: this.state.time.toString(), 
         latitude: location.latitude,
         longitude: location.longitude
       })
@@ -263,9 +263,16 @@ var Main = React.createClass({
     store
       .get('previous')
       .then(previous => {
-        console.log("PREVIOUS COORDS...", previous['latitude'].toFixed(5));
-        // this.setCenterCoordinateZoomLevelAnimated(mapRef, 35.68829, 139.77492, 14)
-        this.setCenterCoordinateZoomLevelAnimated(mapRef, previous['latitude'], previous['longitude'], 14);    
+        this.setCenterCoordinateZoomLevelAnimated(mapRef, previous['latitude'], previous['longitude'], 16);    
+        this.setState({parked: true});
+        this.setState({time: new Date(previous.time)});
+        this.addAnnotations(mapRef, [{
+          coordinates: [previous.latitude, previous.longitude],
+          type: 'point', 
+          title: "parkit", 
+          subtitle: "on " + this.state.time.toLocaleString(),
+          id: 'parking1'
+        }])
       })
   },
 
