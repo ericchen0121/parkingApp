@@ -70,7 +70,12 @@ var Main = React.createClass({
   _storeLocationPrevious() {
     store
       .get('current')
-      .then(current => {store.save('previous', current) })
+      .then(current => {
+        // checks to ensure previous is not overwritten
+        if(current) {
+          store.save('previous', current) 
+        }
+      })
       .then(() => store.delete('current'))
       .then(() => store.get('previous'))  
       .then(previous => console.log('DEBUG: ', previous)) // debug
@@ -263,9 +268,14 @@ var Main = React.createClass({
     store
       .get('previous')
       .then(previous => {
-        this.setCenterCoordinateZoomLevelAnimated(mapRef, previous['latitude'], previous['longitude'], 16);    
-        this.setState({parked: true});
-        this.setState({time: new Date(previous.time)});
+        console.log('PREVIOUS IS ', previous)
+        this.removeAllAnnotations(mapRef);
+        this.setState({
+          parked: true, 
+          time: new Date(previous.time),
+          photoPath: previous.photoPath,
+          notes: previous.notes
+        });
         this.addAnnotations(mapRef, [{
           coordinates: [previous.latitude, previous.longitude],
           type: 'point', 
@@ -273,6 +283,7 @@ var Main = React.createClass({
           subtitle: "on " + this.state.time.toLocaleString(),
           id: 'parking1'
         }])
+        this.setCenterCoordinateZoomLevelAnimated(mapRef, previous['latitude'], previous['longitude'], 16);    
       })
   },
 
