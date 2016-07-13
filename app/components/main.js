@@ -23,12 +23,14 @@ var ViewPhoto = require('./viewPhoto.js');
 
 var Main = React.createClass({
   mixins: [Mapbox.Mixin],
+
   componentDidMount() {
     store
       .get('parking1')
       .then(parking1 => console.log('GOT PREVIOUS PARKING!', parking1))
       .catch(console.log('no previous parking!'))
   },
+
   getInitialState() {
     return {
       center: {
@@ -43,6 +45,7 @@ var Main = React.createClass({
       time: undefined
     };
   },
+
   _setPark(){
     
     this.setZoomLevelAnimated(mapRef, 17);
@@ -60,37 +63,42 @@ var Main = React.createClass({
         }])
 
         // persist location
-        store.save('current', { 
-          time: this.state.time, 
-          latitude: location.latitude,
-          longitude: location.latitude
-        })
+       this._storeLocationDetails(location);
+
       } else {
         console.log('location not set') 
       }
     })
-
-    // save key in local storage
-
   },
+
   _cancelPark(){
      //reset all markers
     this.removeAllAnnotations(mapRef);
     this.setState({parked: false, photoPath: undefined, notes: ''});
     this.setZoomLevelAnimated(mapRef, 16);
 
-    this._storeToPrevious();   
+    this._storeLocationPrevious();   
   },
+
   // persist location to storage
-  _storeToPrevious() {
+  _storeLocationPrevious() {
     store
       .get('current')
       .then(current => {store.save('previous', current) })
       .then(() => store.delete('current'))
       .then(() => store.get('previous'))  
-      .then(previous => console.log(previous))
+      .then(previous => console.log(previous)) // debug
   },
-  _parkButton(){
+
+  _storeLocationDetails(location) {
+     store.save('current', { 
+        time: this.state.time, 
+        latitude: location.latitude,
+        longitude: location.latitude
+      })
+  },
+
+  _renderParkButton(){
     if(this.state.parked) {
       return (
         <Button
@@ -113,7 +121,8 @@ var Main = React.createClass({
       )
     }
   },
-  _photoButton() {
+
+  _renderPhotoButton() {
     if(!this.state.parked) return;
     return (
       <View style={styles.cameraButton}>
@@ -121,7 +130,7 @@ var Main = React.createClass({
       </View>
     )
   },
-  _photoTaken() {
+  _renderPhotoTaken() {
     if(!this.state.photoPath) return;
     return ( 
       <View style={styles.buttonPhotoTakenContainer}>
@@ -134,25 +143,29 @@ var Main = React.createClass({
       </View>
     )
   },
+
   _viewPhoto() {
     this.props.navigator.push({
       component: ViewPhoto,
       passProps: {photoPath: this.state.photoPath}
     });
   },
+
   _takePhoto(){
     this.props.navigator.push({ 
       component: Photo,
       passProps: {callback: this.callbackPhoto}
     });
   },
+
   callbackPhoto(path){
     this.setState({photoPath: path});
     
-    // update storage 
+    // update persistence location with photo
     store.update('current', {photoPath: path});
   },
-  _centerMapButton() {
+
+  _renderCenterMapButton() {
     return (
       <View>
         <View style={styles.centerMapButtonStack}>
@@ -164,12 +177,14 @@ var Main = React.createClass({
       </View>
     )
   },
+
   _centerMap() {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         this.setCenterCoordinateZoomLevelAnimated(mapRef, position.coords.latitude, position.coords.longitude, 16);
       })
   },
+
   _notes() {
     if(!this.state.parked) return;
     return (
@@ -186,6 +201,7 @@ var Main = React.createClass({
       </View>
     )
   },
+
   render() {
     StatusBar.setHidden(false);
     return (
@@ -214,10 +230,10 @@ var Main = React.createClass({
           onTap={this.onTap}
           onOfflineProgressDidChange={this.onOfflineProgressDidChange}
           onOfflineMaxAllowedMapboxTiles={this.onOfflineMaxAllowedMapboxTiles} />
-        {this._parkButton()}
-        {this._photoButton()}
-        {this._photoTaken()}
-        {this._centerMapButton()}
+        {this._renderParkButton()}
+        {this._renderPhotoButton()}
+        {this._renderPhotoTaken()}
+        {this._renderCenterMapButton()}
         {this._notes()}
       </View>
     );
