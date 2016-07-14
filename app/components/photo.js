@@ -29,8 +29,11 @@ class Photo extends Component {
           
         </Camera>
         <View style={styles.captureContainer}>
-          <TouchableOpacity>
-            <Icon name='circle' size={80} color='#48d1cc' onPress={this.takePicture.bind(this)} />
+          <TouchableOpacity onPress={this.takePicture.bind(this)}>
+            <Icon name='circle' size={80} color='white' />
+            <View style={styles.captureButtonInside}>
+              <Icon name='circle-thin' size={64} color='#48d1cc' />
+            </View>
           </TouchableOpacity>
         </View>
       </View>
@@ -75,6 +78,10 @@ const styles = StyleSheet.create({
     left: 10, 
     right: 10,
     borderRadius: 10,
+    alignItems: 'center'
+  }, 
+  captureButtonInside: {
+    bottom: 72,
     alignItems: 'center'
   }, 
 });

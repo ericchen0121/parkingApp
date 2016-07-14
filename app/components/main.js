@@ -77,8 +77,9 @@ var Main = React.createClass({
         }
       })
       .then(() => store.delete('current'))
-      .then(() => store.get('previous'))  
-      .then(previous => console.log('DEBUG: ', previous)) // debug
+      // Note: Debugging in console for seeing store
+      // .then(() => store.get('previous'))  
+      // .then(previous => console.log('DEBUG: ', previous))
   },
 
   _storeLocationDetails(location) {
@@ -247,13 +248,13 @@ var Main = React.createClass({
     return (
       <View style={styles.notes} >
         <TextInput 
-          style={{height: 40}}
+          style={{height: 40, paddingLeft: 10}}
           onChangeText= {(notes) => {
             this.setState({notes: notes});
             this._storeLocationNotes(notes);
           }}
           value={this.state.notes}
-          placeholder='  parking meter, garage, street address'
+          placeholder='parking meter, garage, street address'
         />
       </View>
     )
@@ -378,7 +379,12 @@ var styles = StyleSheet.create({
   buttonPhotoTakenContainer: {  
     position: 'absolute', 
     top: 80, 
-    left: 20    
+    left: 20, 
+    height: 50, 
+    width: 50,
+    backgroundColor: '#48d1cc',
+    borderRadius: 5, 
+    padding: 2
   },
   photo: {
     height: 46, 
