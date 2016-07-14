@@ -150,7 +150,12 @@ var Main = React.createClass({
   _cancelPark(){
      //reset all markers
     this.removeAllAnnotations(mapRef);
-    this.setState({parked: false, photoPath: undefined, notes: ''});
+    this.setState({
+      parked: false, 
+      viewHistoryParking: false,
+      photoPath: undefined, 
+      notes: ''
+    });
     this.setZoomLevelAnimated(mapRef, 15);
 
     this._storeLocationPrevious();   
@@ -216,7 +221,6 @@ var Main = React.createClass({
   },
 
   _centerMap() {
-    console.log('CENTERING MAP')
     navigator.geolocation.getCurrentPosition(
       (position) => {
         this.setCenterCoordinateZoomLevelAnimated(mapRef, position.coords.latitude, position.coords.longitude, 16);
@@ -258,19 +262,25 @@ var Main = React.createClass({
 // HISTORY
 //------------------
   _renderHistoryButton() {
+    if(this.state.viewHistoryParking) return;
     return (
-      <View style={styles.historyButton}>
-        <Icon onPress={this._gotoHistoryLocation} name="history" size={40} color="#48d1cc" />
+      <View>
+        <View style={styles.historyButtonStack}>
+          <Icon name="circle" size={60} color="white" />
+        </View>
+        <View style={styles.historyButton}>
+          <Icon onPress={this._gotoHistoryLocation} name="history" size={44} color="#48d1cc" />
+        </View>
       </View>
-    )
+    );
   },
   _gotoHistoryLocation() {
     store
       .get('previous')
       .then(previous => {
-        console.log('PREVIOUS IS ', previous)
         this.removeAllAnnotations(mapRef);
         this.setState({
+          viewHistoryParking: true,
           parked: true, 
           time: new Date(previous.time),
           photoPath: previous.photoPath,
@@ -380,8 +390,14 @@ var styles = StyleSheet.create({
     backgroundColor: 'rgba(52,52,52,0)',
     position: 'absolute', 
     bottom: 220, 
-    left: 22, 
+    left: 24, 
     borderRadius: 5
+  }, 
+  historyButtonStack: {
+    backgroundColor: 'rgba(52,52,52,0)',
+    position: 'absolute', 
+    bottom: 218, 
+    left: 16.5
   }, 
   centerMapButton: {
     backgroundColor: 'rgba(52,52,52,0)',
