@@ -76,12 +76,44 @@ var Main = React.createClass({
           store.save('previous', current) 
         }
       })
-      .then(() => store.delete('current'))
+      // .then(() => store.delete('current'))
       // Note: Debugging in console for seeing store
       // .then(() => store.get('previous'))  
       // .then(previous => console.log('DEBUG: ', previous))
   },
+  // switches current to previous and vice versa so previous state is "correct"
+  _storePreviousToCurrent() {
+    var temp = {};
+    store
+      .get('previous')
+      .then(previous => {
+        // checks to ensure previous is not overwritten
+        if(previous) {
+          store
+            .get('current')
+            .then(current => {
+              temp = current;
+              store.update('current', previous)
+            })
+            .catch(err => {console.log('caught error in Current')})
+        }
+      })
+      .then(() => store.get('previous'))
+      .then(previous => {
+        if(previous){
+          store.update('previous', temp)
+        } else {
+          store.save('previous, temp')
+        } 
+      })
+      .catch(error => {
+        console.error(error.message);
+      })
 
+      //   
+      // })
+      
+  },
   _storeLocationDetails(location) {
      store.save('current', { 
         time: this.state.time.toString(), 
@@ -281,7 +313,7 @@ var Main = React.createClass({
       .then(previous => {
         this.removeAllAnnotations(mapRef);
         this.setState({
-          viewHistoryParking: true,
+          // viewHistoryParking: true,
           parked: true, 
           time: new Date(previous.time),
           photoPath: previous.photoPath,
@@ -294,8 +326,9 @@ var Main = React.createClass({
           subtitle: "on " + this.state.time.toLocaleString(),
           id: 'parking1'
         }])
-        this.setCenterCoordinateZoomLevelAnimated(mapRef, previous['latitude'], previous['longitude'], 16);    
+        this.setCenterCoordinateZoomLevelAnimated(mapRef, previous['latitude'], previous['longitude'], 16);  
       })
+    this._storePreviousToCurrent();
   },
 
 //------------------
