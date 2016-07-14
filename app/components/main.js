@@ -83,36 +83,20 @@ var Main = React.createClass({
   },
   // switches current to previous and vice versa so previous state is "correct"
   _storePreviousToCurrent() {
-    var temp = {};
+    var previousTemp = {};
+    var currentTemp = {};
     store
       .get('previous')
-      .then(previous => {
-        // checks to ensure previous is not overwritten
-        if(previous) {
-          store
-            .get('current')
-            .then(current => {
-              temp = current;
-              store.update('current', previous)
-            })
-            .catch(err => {console.log('caught error in Current')})
-        }
-      })
-      .then(() => store.get('previous'))
-      .then(previous => {
-        if(previous){
-          store.update('previous', temp)
-        } else {
-          store.save('previous, temp')
-        } 
-      })
+      .then(previous => {previousTemp = previous})
+      .then(() => store.get('current'))
+      .then(current => {currentTemp = current})
+      .then(() => store.delete('previous'))
+      .then(() => store.delete('current'))
+      .then(() => store.save('current', previousTemp))
+      .then(() => store.save('previous', currentTemp))
       .catch(error => {
         console.error(error.message);
-      })
-
-      //   
-      // })
-      
+      })      
   },
   _storeLocationDetails(location) {
      store.save('current', { 
@@ -319,6 +303,7 @@ var Main = React.createClass({
           photoPath: previous.photoPath,
           notes: previous.notes
         });
+        this.setCenterCoordinateZoomLevelAnimated(mapRef, previous['latitude'], previous['longitude'], 16);  
         this.addAnnotations(mapRef, [{
           coordinates: [previous.latitude, previous.longitude],
           type: 'point', 
@@ -326,7 +311,6 @@ var Main = React.createClass({
           subtitle: "on " + this.state.time.toLocaleString(),
           id: 'parking1'
         }])
-        this.setCenterCoordinateZoomLevelAnimated(mapRef, previous['latitude'], previous['longitude'], 16);  
       })
     this._storePreviousToCurrent();
   },
