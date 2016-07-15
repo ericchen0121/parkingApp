@@ -24,6 +24,8 @@ class Photo extends Component {
           }}
           style={styles.preview}
           aspect={Camera.constants.Aspect.fill}
+          captureAudio={false}
+          captureMode={Camera.constants.CaptureMode.still}
           captureTarget={Camera.constants.CaptureTarget.disk}
           >
           

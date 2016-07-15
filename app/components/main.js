@@ -6,6 +6,7 @@ var mapRef = 'mapRef';
 var store = require('react-native-simple-store');
 
 import {
+  Alert,
   AppRegistry,
   StyleSheet,
   Text,
@@ -20,6 +21,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 var Button = require('react-native-button');
 var Photo = require('./photo');
 var ViewPhoto = require('./viewPhoto.js');
+var alertMessage = 'Go to previously parked location?';
 
 var Main = React.createClass({
   mixins: [Mapbox.Mixin],
@@ -31,6 +33,7 @@ var Main = React.createClass({
     this._setStateCenterCoordinates()
   },
   componentDidMount() {
+    this._setParkedOnExitFlag();
   },
   getInitialState() {
     return {
@@ -62,7 +65,41 @@ var Main = React.createClass({
       })
   },
 
-  
+//------------------
+// PARKED WHEN EXIT APP FLAG
+//------------------
+
+  _setParkedOnExitFlag() {
+    store
+      .get('parkedFlag') 
+      .then(state => {
+        if(state){
+          this.setState({'parkedOnExit': true});
+          this._alertParkedOnExit();
+        } else {
+          this.setState({'parkedOnExit': false});
+        }
+      })
+      .catch(err => console.error(err))
+  },
+
+  _alertParkedOnExit() {
+    Alert.alert(
+      'Previously parked!',
+      alertMessage,
+      [
+        {text: 'Cancel', onPress: () => console.log('canceled')},
+        {text: 'OK', onPress: () => this._gotoLocation('current')},
+      ]
+    )
+  },
+  _storeParkedFlag(state) {
+    store
+      .delete('parkedFlag')
+      .then(() => store.save('parkedFlag', state))
+      .catch(err => console.err())
+  },
+
 
 //------------------
 // STORAGE
@@ -114,6 +151,7 @@ var Main = React.createClass({
     store.update('current', {notes: notes})
   },
 
+  
 //------------------
 // PARKING
 //------------------
@@ -157,7 +195,7 @@ var Main = React.createClass({
 
         // persist location
        this._storeLocationDetails(location);
-
+       this._storeParkedFlag(true);
       } else {
         console.log('location not set') 
       }
@@ -176,6 +214,7 @@ var Main = React.createClass({
     this.setZoomLevelAnimated(mapRef, 15);
 
     this._storeLocationPrevious();   
+    this._storeParkedFlag(false);
   },
 //------------------
 // PHOTO
@@ -270,7 +309,7 @@ var Main = React.createClass({
             this._storeLocationNotes(notes);
           }}
           value={this.state.notes}
-          placeholder='parking meter, garage, street address'
+          placeholder='parking notes'
         />
       </View>
     )
@@ -292,29 +331,33 @@ var Main = React.createClass({
     );
   },
   _gotoHistoryLocation() {
+    this._gotoLocation('previous');
+    this._storePreviousToCurrent();
+  },
+
+  // key is 'current' or 'previous'
+  _gotoLocation(key) {
     store
-      .get('previous')
-      .then(previous => {
+      .get(key)
+      .then(key => {
         this.removeAllAnnotations(mapRef);
         this.setState({
           // viewHistoryParking: true,
           parked: true, 
-          time: new Date(previous.time),
-          photoPath: previous.photoPath,
-          notes: previous.notes
+          time: new Date(key.time),
+          photoPath: key.photoPath,
+          notes: key.notes
         });
-        this.setCenterCoordinateZoomLevelAnimated(mapRef, previous['latitude'], previous['longitude'], 16);  
+        this.setCenterCoordinateZoomLevelAnimated(mapRef, key['latitude'], key['longitude'], 16);  
         this.addAnnotations(mapRef, [{
-          coordinates: [previous.latitude, previous.longitude],
+          coordinates: [key.latitude, key.longitude],
           type: 'point', 
           title: "parkit", 
           subtitle: "on " + this.state.time.toLocaleString(),
           id: 'parking1'
         }])
       })
-    this._storePreviousToCurrent();
   },
-
 //------------------
 // RENDER
 //------------------
