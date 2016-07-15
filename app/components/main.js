@@ -104,6 +104,17 @@ var Main = React.createClass({
 //------------------
 // STORAGE
 //------------------
+// TODO: Could factor out the 'previous' state since we're not really
+// using it. To do this, don't use the _storePreviousToCurrent() function
+// nor the _storeLocationPrevious(). Currently we are only using the one 'current'
+// state location to go back to it when a) exiting the app when parked and b) 
+// if the user accidentally presses the cancel button to go back to the 'current' 
+// state. 
+// 
+// However, since the 'previous' state was written, I haven't yet factored the code 
+// out in case you want to use it in the future (it allows you to retrieve potentially two
+// states of parking when you are parked and toggle back and forth between them).
+// 
   _storeLocationPrevious() {
     store
       .get('current')
@@ -183,7 +194,10 @@ var Main = React.createClass({
     // get location and add a marker to the map
     this.getCenterCoordinateZoomLevel(mapRef, (location) => {
       if(location) {
-        this.setState({parked: true});
+        this.setState({
+          parked: true,
+          viewHistoryParking: false,
+        });
         this.setState({time: new Date});
         this.addAnnotations(mapRef, [{
           coordinates: [location.latitude, location.longitude],
@@ -207,7 +221,7 @@ var Main = React.createClass({
     this.removeAllAnnotations(mapRef);
     this.setState({
       parked: false, 
-      viewHistoryParking: false,
+      viewHistoryParking: true,
       photoPath: undefined, 
       notes: ''
     });
@@ -318,7 +332,7 @@ var Main = React.createClass({
 // HISTORY
 //------------------
   _renderHistoryButton() {
-    if(this.state.viewHistoryParking) return;
+    if(!this.state.viewHistoryParking) return;
     return (
       <View>
         <View style={styles.historyButtonStack}>
@@ -331,6 +345,7 @@ var Main = React.createClass({
     );
   },
   _gotoHistoryLocation() {
+    this.setState({viewHistoryParking: false})
     this._gotoLocation('previous');
     this._storePreviousToCurrent();
   },
