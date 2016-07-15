@@ -47,8 +47,8 @@ var Main = React.createClass({
       parked: false, 
       photoPath: undefined, 
       notes: '', 
-      setCameraAnimated: new Date, 
-      mapStyle: this.mapStyles.streets
+      time: new Date, 
+      mapStyle: this.mapStyles.streets // streets, dark, light, satellite, hybrid, emerald OR custom
     };
   },
   
@@ -443,8 +443,8 @@ var styles = StyleSheet.create({
     backgroundColor: '#f08080',
     position: 'absolute', 
     bottom: 10, 
-    left: 10, 
-    right: 10, 
+    left: 35, 
+    right: 35, 
     borderRadius: 10
   }, 
   buttonToPark: {
@@ -452,8 +452,8 @@ var styles = StyleSheet.create({
     backgroundColor: '#48d1cc',
     position: 'absolute', 
     bottom: 10, 
-    left: 10, 
-    right: 10, 
+    left: 35, 
+    right: 35, 
     borderRadius: 10
   }, 
   cameraButton: {
@@ -509,7 +509,7 @@ var styles = StyleSheet.create({
     position: 'absolute', 
     top: 30,
     left: 80,
-    right: 10, 
+    right: 55, 
     backgroundColor: 'white'
   }, 
   notesText: {
@@ -521,7 +521,7 @@ var styles = StyleSheet.create({
     position: 'absolute', 
     top: 80,
     left: 80,
-    right: 10, 
+    right: 55, 
     backgroundColor: 'rgba(14,100,60,0.35)',
     borderRadius: 2, 
     paddingLeft: 10, 
