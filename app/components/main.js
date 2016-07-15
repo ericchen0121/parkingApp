@@ -47,7 +47,7 @@ var Main = React.createClass({
       parked: false, 
       photoPath: undefined, 
       notes: '', 
-      time: undefined, 
+      setCameraAnimated: new Date, 
       mapStyle: this.mapStyles.streets
     };
   },
@@ -202,7 +202,7 @@ var Main = React.createClass({
         this.addAnnotations(mapRef, [{
           coordinates: [location.latitude, location.longitude],
           type: 'point', 
-          title: "parkit", 
+          title: "parked", 
           subtitle: "on " + this.state.time.toLocaleString(),
           id: 'parking1'
         }])
@@ -312,12 +312,12 @@ var Main = React.createClass({
 //------------------
 // NOTES
 //------------------
-  _notes() {
+  _renderNotes() {
     if(!this.state.parked) return;
     return (
       <View style={styles.notes} >
         <TextInput 
-          style={{height: 40, paddingLeft: 10}}
+          style={styles.notesText}
           onChangeText= {(notes) => {
             this.setState({notes: notes});
             this._storeLocationNotes(notes);
@@ -328,6 +328,18 @@ var Main = React.createClass({
       </View>
     )
   },
+//------------------
+// PARKING STATUS
+//------------------
+  _renderParkingStatus() {
+    if(!this.state.parked) return;
+    return (
+      <View style={styles.parkingStatus} >
+        <Text style={styles.parkingStatusText}>parked at {this.state.time.toLocaleTimeString()}</Text>
+      </View>
+    )
+  },
+
 //------------------
 // HISTORY
 //------------------
@@ -367,7 +379,7 @@ var Main = React.createClass({
         this.addAnnotations(mapRef, [{
           coordinates: [key.latitude, key.longitude],
           type: 'point', 
-          title: "parkit", 
+          title: "parked", 
           subtitle: "on " + this.state.time.toLocaleString(),
           id: 'parking1'
         }])
@@ -408,8 +420,9 @@ var Main = React.createClass({
         {this._renderPhotoButton()}
         {this._renderPhotoTaken()}
         {this._renderCenterMapButton()}
-        {this._notes()}
+        {this._renderNotes()}
         {this._renderHistoryButton()}
+        {this._renderParkingStatus()}
       </View>
     );
   }
@@ -495,9 +508,29 @@ var styles = StyleSheet.create({
   notes: {
     position: 'absolute', 
     top: 30,
-    left: 70,
+    left: 80,
     right: 10, 
     backgroundColor: 'white'
+  }, 
+  notesText: {
+    height: 40, 
+    paddingLeft: 10, 
+    paddingRight: 10
+  },
+  parkingStatus: {
+    position: 'absolute', 
+    top: 80,
+    left: 80,
+    right: 10, 
+    backgroundColor: 'rgba(14,100,60,0.35)',
+    borderRadius: 2, 
+    paddingLeft: 10, 
+    paddingTop: 3,
+    paddingBottom: 3
+  }, 
+  parkingStatusText: {
+    fontSize: 13,
+    color: 'white' //'#2B2A2A'//'#3C3B3B', 
   }
 });
 
