@@ -52,36 +52,23 @@ var Main = React.createClass({
       mapStyle: this.mapStyles.streets // streets, dark, light, satellite, hybrid, emerald OR custom
     };
   },
-  
-  _setCurrentPosition() {
-    store
-      .get('current')
-      .then(current => {
-        if(current) {
-          console.log('CURRENT POSITION IS', current)
-          this.setCenterCoordinateZoomLevelAnimated(mapRef, current.latitude, current.longitude, 17)
-        } else{
-          console.log('NOTHING, BABY')
-        }
-      })
-  },
 
 //------------------
 // GEOCODE
 // https://github.com/devfd/react-native-geocoder
 //------------------
-
-  _geocodeLocation(location) {
-    var position = { lat: location.latitude, lng: location.longitude}; 
-    console.log('POSITION IS : ', position);
+  
+  _geocodeLocation(lat, lng) {
+    var position = {lat, lng}; 
     Geocoder
       .geocodePosition(position)
       .then(result => {
         if(result[0]) {
-          console.log('resulting ADDRESS: ', result)  
-        } else { console.log('no result')}
-        
-        // this.setState({'address': result[0].formattedAddress})
+          var address = result[0].streetNumber + ' ' + result[0].streetName
+          this.setState({'address': address })
+          this._storeLocationAddress(address)
+          // console.log('resulting ADDRESS: ', result) // debug position 
+        } else { console.log('no geocode location')}
       })
       .catch(err => console.log(err))
   },
@@ -109,7 +96,7 @@ var Main = React.createClass({
       alertMessage,
       [
         {text: 'Cancel', onPress: () => console.log('canceled')},
-        {text: 'OK', onPress: () => this._gotoLocation('current')},
+        {text: 'OK', onPress: () => {this._gotoLocation('current')} },
       ]
     )
   },
@@ -174,12 +161,15 @@ var Main = React.createClass({
       })
   },
 
-  _storeLocationPhoto(path) {
-    store.update('current', {photoPath: path});
+  _storeLocationPhoto(photoPath) {
+    store.update('current', {photoPath});
   },
 
   _storeLocationNotes(notes) {
-    store.update('current', {notes: notes})
+    store.update('current', {notes})
+  },
+  _storeLocationAddress(address) {
+    store.update('current', {address})
   },
 
   
@@ -209,31 +199,34 @@ var Main = React.createClass({
       )
     }
   },
+
+  // sets active parked location to center of the map
+  // stores location in k-v store for persisting location on app exit
+  // 
   _setPark(){
     this.setZoomLevelAnimated(mapRef, 16);
+
     // get location and add a marker to the map
     this.getCenterCoordinateZoomLevel(mapRef, (location) => {
       if(location) {
-        this._geocodeLocation(location);
+        this._geocodeLocation(location.latitude, location.longitude);
         this.setState({
           parked: true,
           viewHistoryParking: false,
+          time: new Date
         });
-        this.setState({time: new Date});
         this.addAnnotations(mapRef, [{
           coordinates: [location.latitude, location.longitude],
           type: 'point', 
-          title: "parked", 
+          title: 'parked', 
           subtitle: "on " + this.state.time.toLocaleString(),
           id: 'parking1'
         }])
 
-        // persist location
+        // persist location for when user exits app
        this._storeLocationDetails(location);
        this._storeParkedFlag(true);
-      } else {
-        console.log('location not set') 
-      }
+      } 
     })
   },
 
@@ -356,7 +349,8 @@ var Main = React.createClass({
     if(!this.state.parked) return;
     return (
       <View style={styles.parkingStatus} >
-        <Text style={styles.parkingStatusText}>parked at {this.state.time.toLocaleTimeString()}</Text>
+        <Text style={styles.parkingStatusText}>{this.state.address}</Text>
+        <Text style={styles.parkingStatusText}>at {this.state.time.toLocaleTimeString()}</Text>
       </View>
     )
   },
@@ -394,13 +388,14 @@ var Main = React.createClass({
           parked: true, 
           time: new Date(key.time),
           photoPath: key.photoPath,
-          notes: key.notes
+          notes: key.notes,
+          address: key.address
         });
         this.setCenterCoordinateZoomLevelAnimated(mapRef, key['latitude'], key['longitude'], 16);  
         this.addAnnotations(mapRef, [{
           coordinates: [key.latitude, key.longitude],
           type: 'point', 
-          title: "parked", 
+          title: 'parked', 
           subtitle: "on " + this.state.time.toLocaleString(),
           id: 'parking1'
         }])
