@@ -17,6 +17,7 @@ import {
   TouchableWithoutFeedback
 } from 'react-native';
 
+import Geocoder from 'react-native-geocoder';
 import Icon from 'react-native-vector-icons/FontAwesome';
 var Button = require('react-native-button');
 var Photo = require('./photo');
@@ -65,6 +66,25 @@ var Main = React.createClass({
       })
   },
 
+//------------------
+// GEOCODE
+// https://github.com/devfd/react-native-geocoder
+//------------------
+
+  _geocodeLocation(location) {
+    var position = { lat: location.latitude, lng: location.longitude}; 
+    console.log('POSITION IS : ', position);
+    Geocoder
+      .geocodePosition(position)
+      .then(result => {
+        if(result[0]) {
+          console.log('resulting ADDRESS: ', result)  
+        } else { console.log('no result')}
+        
+        // this.setState({'address': result[0].formattedAddress})
+      })
+      .catch(err => console.log(err))
+  },
 //------------------
 // PARKED WHEN EXIT APP FLAG
 //------------------
@@ -194,6 +214,7 @@ var Main = React.createClass({
     // get location and add a marker to the map
     this.getCenterCoordinateZoomLevel(mapRef, (location) => {
       if(location) {
+        this._geocodeLocation(location);
         this.setState({
           parked: true,
           viewHistoryParking: false,

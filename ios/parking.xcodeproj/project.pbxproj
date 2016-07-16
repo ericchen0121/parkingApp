@@ -31,6 +31,7 @@
 		9F452AF6F42A4EA1A684D29C /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 61E6D14626E94C21B47C81C6 /* EvilIcons.ttf */; };
 		C17523EDA0FE4F5F9C5314AB /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EECE9CB25E0F4BE19D897494 /* libRNVectorIcons.a */; };
 		C2BAF157D2BB4B968EAC682F /* libRCTCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A57B3814A90D44B7855930EC /* libRCTCamera.a */; };
+		C406A63A1D3AEED2008B5190 /* libRNGeocoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C42306C81D3AED0200EA92AB /* libRNGeocoder.a */; };
 		C485F6341D2C65FE005643BB /* Mapbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C485F6331D2C65FE005643BB /* Mapbox.framework */; };
 		C485F6351D2C65FF005643BB /* Mapbox.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C485F6331D2C65FE005643BB /* Mapbox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C485F6381D2C663D005643BB /* libRCTMapboxGL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C485F6301D2C65AE005643BB /* libRCTMapboxGL.a */; };
@@ -116,6 +117,13 @@
 			proxyType = 2;
 			remoteGlobalIDString = 58B5119B1A9E6C1200147676;
 			remoteInfo = RCTText;
+		};
+		C42306C71D3AED0200EA92AB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C42306B41D3AED0200EA92AB /* RNGeocoder.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BF8FCF941BFFB184000FCD37;
+			remoteInfo = RNGeocoder;
 		};
 		C485F62F1D2C65AE005643BB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -207,6 +215,7 @@
 		A57B3814A90D44B7855930EC /* libRCTCamera.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTCamera.a; sourceTree = "<group>"; };
 		B544DF283B76447FA78B08BA /* RCTCamera.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RCTCamera.xcodeproj"; sourceTree = "<group>"; };
 		B75AB575E5154541AEDA3564 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
+		C42306B41D3AED0200EA92AB /* RNGeocoder.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNGeocoder.xcodeproj; path = "../node_modules/react-native-geocoder/ios/RNGeocoder.xcodeproj"; sourceTree = "<group>"; };
 		C485F62A1D2C65AE005643BB /* RCTMapboxGL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTMapboxGL.xcodeproj; path = "../node_modules/react-native-mapbox-gl/ios/RCTMapboxGL.xcodeproj"; sourceTree = "<group>"; };
 		C485F6331D2C65FE005643BB /* Mapbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Mapbox.framework; sourceTree = "<group>"; };
 		CE8507583D1F4E28A58032B6 /* libRCTMapboxGL.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTMapboxGL.a; sourceTree = "<group>"; };
@@ -228,6 +237,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C406A63A1D3AEED2008B5190 /* libRNGeocoder.a in Frameworks */,
 				C485F6381D2C663D005643BB /* libRCTMapboxGL.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
@@ -355,6 +365,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				C42306B41D3AED0200EA92AB /* RNGeocoder.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
 				00C302B51ABCB90400DB3ED1 /* RCTGeolocation.xcodeproj */,
@@ -417,6 +428,14 @@
 				23E4DA9A6FAD455FA0AB193B /* Zocial.ttf */,
 			);
 			name = Resources;
+			sourceTree = "<group>";
+		};
+		C42306B51D3AED0200EA92AB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C42306C81D3AED0200EA92AB /* libRNGeocoder.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		C485F62B1D2C65AE005643BB /* Products */ = {
@@ -577,6 +596,10 @@
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
 				},
 				{
+					ProductGroup = C42306B51D3AED0200EA92AB /* Products */;
+					ProjectRef = C42306B41D3AED0200EA92AB /* RNGeocoder.xcodeproj */;
+				},
+				{
 					ProductGroup = C4CEF1171D2F443800242457 /* Products */;
 					ProjectRef = A10C685789174014ABD0D21F /* RNVectorIcons.xcodeproj */;
 				},
@@ -658,6 +681,13 @@
 			fileType = archive.ar;
 			path = libRCTText.a;
 			remoteRef = 832341B41AAA6A8300B99B32 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C42306C81D3AED0200EA92AB /* libRNGeocoder.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNGeocoder.a;
+			remoteRef = C42306C71D3AED0200EA92AB /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		C485F6301D2C65AE005643BB /* libRCTMapboxGL.a */ = {
@@ -950,6 +980,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
 			};
 			name = Debug;
 		};
