@@ -306,7 +306,7 @@ var Main = React.createClass({
           <Icon name="circle" size={60} color="white" />
         </View>
         <View style={styles.centerMarkerButton}>
-          <Icon onPress={this._centerMarker} name="map-marker" size={52} color="#48d1cc" />
+          <Icon onPress={this._centerMarker} name="map-marker" size={44} color="#48d1cc" />
         </View>
       </View>
     )
@@ -375,7 +375,7 @@ var Main = React.createClass({
     if(!this.state.parked) return;
     return (
       <View style={styles.parkingStatus} >
-        <Text style={styles.parkingStatusText}>{this.state.address}</Text>
+        <Text style={styles.parkingStatusBigText}>{this.state.address}</Text>
         <Text style={styles.parkingStatusText}>at {this.state.time.toLocaleTimeString()}</Text>
       </View>
     )
@@ -566,7 +566,7 @@ var styles = StyleSheet.create({
     top: 80,
     left: 80,
     right: 55, 
-    backgroundColor: 'rgba(14,100,60,0.35)',
+    backgroundColor: 'rgba(14,100,60,0.55)',
     borderRadius: 2, 
     paddingLeft: 10, 
     paddingTop: 3,
@@ -574,6 +574,10 @@ var styles = StyleSheet.create({
   }, 
   parkingStatusText: {
     fontSize: 13,
+    color: 'white' //'#2B2A2A'//'#3C3B3B', 
+  }, 
+  parkingStatusBigText: {
+    fontSize: 17,
     color: 'white' //'#2B2A2A'//'#3C3B3B', 
   }, 
   centerMarkerButtonStack: {
@@ -585,8 +589,8 @@ var styles = StyleSheet.create({
   centerMarkerButton: {
     backgroundColor: 'rgba(52,52,52,0)',
     position: 'absolute', 
-    bottom: 150, 
-    left: 87
+    bottom: 155, 
+    left: 89
   }
 });
 
