@@ -58,7 +58,7 @@ var Main = React.createClass({
 // https://github.com/devfd/react-native-geocoder
 //------------------
   
-  _geocodeLocation(lat, lng) {
+  _geocodeLocationToAddress(lat, lng) {
     var position = {lat, lng}; 
     Geocoder
       .geocodePosition(position)
@@ -156,8 +156,10 @@ var Main = React.createClass({
   _storeLocationDetails(location) {
      store.save('current', { 
         time: this.state.time.toString(), 
-        latitude: location.latitude,
-        longitude: location.longitude
+        marker: {
+          latitude: location.latitude,
+          longitude: location.longitude
+        }
       })
   },
 
@@ -172,7 +174,6 @@ var Main = React.createClass({
     store.update('current', {address})
   },
 
-  
 //------------------
 // PARKING
 //------------------
@@ -200,20 +201,24 @@ var Main = React.createClass({
     }
   },
 
-  // sets active parked location to center of the map
+  // sets active parked location to center of the users location
   // stores location in k-v store for persisting location on app exit
   // 
   _setPark(){
     this.setZoomLevelAnimated(mapRef, 16);
 
-    // get location and add a marker to the map
+    // get location from center of the map, and add a marker to the map
     this.getCenterCoordinateZoomLevel(mapRef, (location) => {
       if(location) {
-        this._geocodeLocation(location.latitude, location.longitude);
+        this._geocodeLocationToAddress(location.latitude, location.longitude);
         this.setState({
           parked: true,
           viewHistoryParking: false,
-          time: new Date
+          time: new Date,
+          marker: {
+            latitude: location.latitude, 
+            longitude: location.longitude
+          }
         });
         this.addAnnotations(mapRef, [{
           coordinates: [location.latitude, location.longitude],
@@ -244,6 +249,7 @@ var Main = React.createClass({
     this._storeLocationPrevious();   
     this._storeParkedFlag(false);
   },
+
 //------------------
 // PHOTO
 //------------------
@@ -288,8 +294,28 @@ var Main = React.createClass({
     this._storeLocationPhoto(path);
   },
 
+
 //------------------
-// CENTERING 
+// CENTER MAP ON MARKER PARKED LOCATION
+//------------------
+  _renderCenterMarkerButton() {
+    if(!this.state.parked) return;
+    return (
+      <View>
+        <View style={styles.centerMarkerButtonStack}>
+          <Icon name="circle" size={60} color="white" />
+        </View>
+        <View style={styles.centerMarkerButton}>
+          <Icon onPress={this._centerMarker} name="map-marker" size={52} color="#48d1cc" />
+        </View>
+      </View>
+    )
+  },
+  _centerMarker() {
+    this.setCenterCoordinateZoomLevelAnimated(mapRef, this.state.marker.latitude, this.state.marker.longitude, 16);
+  },
+//------------------
+// CENTER MAP ON CURRENT
 //------------------
   _renderCenterMapButton() {
     return (
@@ -315,8 +341,8 @@ var Main = React.createClass({
       (position) => {
         this.setState({
           center: {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
           }
         })
       }
@@ -389,11 +415,12 @@ var Main = React.createClass({
           time: new Date(key.time),
           photoPath: key.photoPath,
           notes: key.notes,
-          address: key.address
+          address: key.address,
+          marker: key.marker
         });
-        this.setCenterCoordinateZoomLevelAnimated(mapRef, key['latitude'], key['longitude'], 16);  
+        this.setCenterCoordinateZoomLevelAnimated(mapRef, key.marker.latitude, key.marker.longitude, 16);  
         this.addAnnotations(mapRef, [{
-          coordinates: [key.latitude, key.longitude],
+          coordinates: [key.marker.latitude, key.marker.longitude],
           type: 'point', 
           title: 'parked', 
           subtitle: "on " + this.state.time.toLocaleString(),
@@ -436,6 +463,7 @@ var Main = React.createClass({
         {this._renderPhotoButton()}
         {this._renderPhotoTaken()}
         {this._renderCenterMapButton()}
+        {this._renderCenterMarkerButton()}
         {this._renderNotes()}
         {this._renderHistoryButton()}
         {this._renderParkingStatus()}
@@ -547,6 +575,18 @@ var styles = StyleSheet.create({
   parkingStatusText: {
     fontSize: 13,
     color: 'white' //'#2B2A2A'//'#3C3B3B', 
+  }, 
+  centerMarkerButtonStack: {
+    backgroundColor: 'rgba(52,52,52,0)',
+    position: 'absolute', 
+    bottom: 146, 
+    left: 76.5,
+  }, 
+  centerMarkerButton: {
+    backgroundColor: 'rgba(52,52,52,0)',
+    position: 'absolute', 
+    bottom: 150, 
+    left: 87
   }
 });
 
