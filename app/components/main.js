@@ -76,10 +76,9 @@ var Main = React.createClass({
           var address = result[0].streetNumber + ' ' + result[0].streetName
           this.setState({'address': address })
           this._storeLocationAddress(address)
-          // console.log('resulting ADDRESS: ', result) // debug position 
         } else { console.log('no geocode location')}
       })
-      .catch(err => console.log(err))
+      .catch(err => console.error(err))
   },
 //------------------
 // PARKED WHEN EXIT APP FLAG
@@ -140,10 +139,6 @@ var Main = React.createClass({
           store.save('previous', current) 
         }
       })
-      // .then(() => store.delete('current'))
-      // Note: Debugging in console for seeing store
-      // .then(() => store.get('previous'))  
-      // .then(previous => console.log('DEBUG: ', previous))
   },
   // switches current to previous and vice versa so previous state is "correct"
   _storePreviousToCurrent() {
@@ -204,7 +199,7 @@ var Main = React.createClass({
           style={styles.button}
           onPress={this._setPark}
         >
-          parkit
+          parq
         </Button>
       )
     }
@@ -232,7 +227,7 @@ var Main = React.createClass({
         this.addAnnotations(mapRef, [{
           coordinates: [location.latitude, location.longitude],
           type: 'point', 
-          title: 'parked', 
+          title: 'parqed', 
           subtitle: "on " + this.state.time.toLocaleString(),
           id: 'parking1'
         }])
@@ -321,7 +316,6 @@ var Main = React.createClass({
     )
   },
   _centerMarker() {
-    console.log('MARKER', this.state.marker)
     if(this.state.marker){
       this.setCenterCoordinateZoomLevelAnimated(mapRef, this.state.marker.latitude, this.state.marker.longitude, 16);  
     } 
@@ -387,7 +381,7 @@ var Main = React.createClass({
             this._storeLocationNotes(notes);
           }}
           value={this.state.notes}
-          placeholder='parking notes'
+          placeholder='parqing notes'
         />
       </View>
     )
@@ -434,7 +428,6 @@ var Main = React.createClass({
       .then(key => {
         this.removeAllAnnotations(mapRef);
         this.setState({
-          // viewHistoryParking: true,
           parked: true, 
           time: new Date(key.time),
           photoPath: key.photoPath,
@@ -598,11 +591,11 @@ var styles = StyleSheet.create({
   }, 
   parkingStatusText: {
     fontSize: 13,
-    color: 'white' //'#2B2A2A'//'#3C3B3B', 
+    color: 'white', 
   }, 
   parkingStatusBigText: {
     fontSize: 17,
-    color: 'white' //'#2B2A2A'//'#3C3B3B', 
+    color: 'white', 
   }, 
   centerMarkerButtonStack: {
     backgroundColor: 'rgba(52,52,52,0)',
