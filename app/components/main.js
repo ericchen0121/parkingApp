@@ -19,6 +19,7 @@ import {
 
 import Geocoder from 'react-native-geocoder';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import * as Animatable from 'react-native-animatable';
 var Button = require('react-native-button');
 var Photo = require('./photo');
 var ViewPhoto = require('./viewPhoto.js');
@@ -41,6 +42,10 @@ var Main = React.createClass({
       // this.state.center should be overridden by this._setStateCenterCoordinates()
       center: {
         latitude: 0,
+        longitude: 0
+      },
+      marker: {
+        latitude: 0, 
         longitude: 0
       },
       zoom: 15,
@@ -312,8 +317,17 @@ var Main = React.createClass({
     )
   },
   _centerMarker() {
-    this.setCenterCoordinateZoomLevelAnimated(mapRef, this.state.marker.latitude, this.state.marker.longitude, 16);
+    console.log('MARKER', this.state.marker)
+    if(this.state.marker){
+      this.setCenterCoordinateZoomLevelAnimated(mapRef, this.state.marker.latitude, this.state.marker.longitude, 16);  
+    } 
   },
+//------------------
+// MAPBOX API
+//------------------
+  onUpdateUserLocation(location) {
+    this._centerMap(location)
+  }, 
 //------------------
 // CENTER MAP ON CURRENT
 //------------------
@@ -330,11 +344,11 @@ var Main = React.createClass({
     )
   },
 
-  _centerMap() {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        this.setCenterCoordinateZoomLevelAnimated(mapRef, position.coords.latitude, position.coords.longitude, 16);
-      })
+  _centerMap(location) {
+    if (location){
+      this.setCenterCoordinateAnimated(mapRef, location.latitude, location.longitude, 16);  
+    }
+    
   },
   _setStateCenterCoordinates() {
     navigator.geolocation.getCurrentPosition(
