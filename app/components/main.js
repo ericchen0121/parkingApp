@@ -32,15 +32,19 @@ var Main = React.createClass({
 // LIFECYCLE
 //------------------
   componentWillMount() {
-    this._setStateCenterCoordinates()
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        this._setStateInitialCenterCoordinates(position.coords.latitude, position.coords.longitude)
+      }
+    )
   },
   componentDidMount() {
     this._setParkedOnExitFlag();
   },
   getInitialState() {
     return {
-      // this.state.center should be overridden by this._setStateCenterCoordinates()
-      center: {
+      // this.state.initalCenter should be overridden by this._setStateCenterCoordinates()
+      initialCenter: {
         latitude: 0,
         longitude: 0
       },
@@ -96,14 +100,14 @@ var Main = React.createClass({
   },
 
   _alertParkedOnExit() {
-    Alert.alert(
-      'Previously parked!',
-      alertMessage,
-      [
-        {text: 'Cancel', onPress: () => console.log('canceled')},
-        {text: 'OK', onPress: () => {this._gotoLocation('current')} },
-      ]
-    )
+    // Alert.alert(
+    //   'Previously parked!',
+    //   alertMessage,
+    //   [
+    //     {text: 'Cancel', onPress: () => console.log('canceled')},
+    //     {text: 'OK', onPress: () => {this._gotoLocation('current')} },
+    //   ]
+    // )
   },
   _storeParkedFlag(state) {
     store
@@ -326,7 +330,7 @@ var Main = React.createClass({
 // MAPBOX API
 //------------------
   onUpdateUserLocation(location) {
-    this._centerMap(location)
+    this._setStateCurrentCenterCoordinates(location.latitude, location.longitude)
   }, 
 //------------------
 // CENTER MAP ON CURRENT
@@ -338,30 +342,36 @@ var Main = React.createClass({
           <Icon name="circle" size={60} color="white" />
         </View>
         <View style={styles.centerMapButton}>
-          <Icon onPress={this._centerMap} name="dot-circle-o" size={52} color="#48d1cc" />
+          <Icon onPress={this._currentCenterMap} name="dot-circle-o" size={52} color="#48d1cc" />
         </View>
       </View>
     )
   },
 
-  _centerMap(location) {
-    if (location){
-      this.setCenterCoordinateAnimated(mapRef, location.latitude, location.longitude, 16);  
-    }
-    
+  _currentCenterMap() {
+    this.setCenterCoordinateAnimated(mapRef, this.state.currentCenter.latitude, this.state.currentCenter.longitude, 16);  
   },
-  _setStateCenterCoordinates() {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        this.setState({
-          center: {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude
-          }
-        })
+//------------------
+// SETTING STATE
+//------------------
+  _setStateInitialCenterCoordinates(lat, lng) {
+    this.setState({
+      initialCenter: {
+        latitude: lat,
+        longitude: lng
       }
-    )
+    })
   },
+  // NOTE: necessary to set a separate coordinate
+  _setStateCurrentCenterCoordinates(lat, lng) {
+    this.setState({
+      currentCenter: {
+        latitude: lat,
+        longitude: lng
+      }
+    })
+  },
+
 
 //------------------
 // NOTES
@@ -461,7 +471,7 @@ var Main = React.createClass({
           accessToken={'pk.eyJ1IjoiZXJpY2NoZW4wMTIxIiwiYSI6ImNpbjR1ZTk5YjBjOHh1cmtrcjE1aHhpd20ifQ.Enx5PU9X5DZgFUs2vohngA'}
           styleURL={this.state.mapStyle}
           userTrackingMode={this.userTrackingMode.none}
-          centerCoordinate={this.state.center}
+          centerCoordinate={this.state.initialCenter}
           zoomLevel={this.state.zoom}
           onRegionChange={this.onRegionChange}
           onRegionWillChange={this.onRegionWillChange}
@@ -604,7 +614,7 @@ var styles = StyleSheet.create({
     backgroundColor: 'rgba(52,52,52,0)',
     position: 'absolute', 
     bottom: 155, 
-    left: 89
+    left: 90
   }
 });
 
