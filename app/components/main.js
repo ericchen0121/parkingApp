@@ -400,6 +400,36 @@ var Main = React.createClass({
   },
 
 //------------------
+// MAP STYLE
+//------------------
+  _renderMapStyleButton() {
+    return (
+      <View>
+        <View style={styles.mapStyleButtonStack}>
+          <Icon name="circle" size={60} color="white" />
+        </View>
+        <View style={styles.mapStyleButton}>
+          <Icon onPress={this._changeMapStyle} name="map-o" size={30} color="#48d1cc" />
+        </View>
+      </View>
+    );
+  },
+  _changeMapStyle() {
+    //streets, dark, light, satellite, hybrid, emerald OR custom
+
+    if(this.state.mapStyle == this.mapStyles.streets) {
+      this.setState({mapStyle: this.mapStyles.light});
+    } else if (this.state.mapStyle == this.mapStyles.light) {
+      this.setState({mapStyle: this.mapStyles.dark});
+    } else if (this.state.mapStyle == this.mapStyles.dark) {
+      this.setState({mapStyle: this.mapStyles.hybrid});
+    } else if (this.state.mapStyle == this.mapStyles.hybrid) {
+      this.setState({mapStyle: this.mapStyles.emerald});
+    } else if (this.state.mapStyle == this.mapStyles.emerald) {
+      this.setState({mapStyle: this.mapStyles.streets});
+    }
+  },
+//------------------
 // HISTORY
 //------------------
   _renderHistoryButton() {
@@ -481,6 +511,7 @@ var Main = React.createClass({
         {this._renderPhotoTaken()}
         {this._renderCenterMapButton()}
         {this._renderCenterMarkerButton()}
+        {this._renderMapStyleButton()}
         {this._renderNotes()}
         {this._renderHistoryButton()}
         {this._renderParkingStatus()}
@@ -553,7 +584,21 @@ var styles = StyleSheet.create({
     position: 'absolute', 
     bottom: 218, 
     left: 16.5
+  },
+  mapStyleButton: {
+    height: 50, 
+    backgroundColor: 'rgba(52,52,52,0)',
+    position: 'absolute', 
+    bottom: 142, 
+    right: 26, 
+    borderRadius: 5
   }, 
+  mapStyleButtonStack: {
+    backgroundColor: 'rgba(52,52,52,0)',
+    position: 'absolute', 
+    bottom: 146, 
+    right: 16.5
+  },  
   centerMapButton: {
     backgroundColor: 'rgba(52,52,52,0)',
     position: 'absolute', 
