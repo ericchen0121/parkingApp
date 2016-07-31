@@ -32,6 +32,7 @@
 		C17523EDA0FE4F5F9C5314AB /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EECE9CB25E0F4BE19D897494 /* libRNVectorIcons.a */; };
 		C2BAF157D2BB4B968EAC682F /* libRCTCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A57B3814A90D44B7855930EC /* libRCTCamera.a */; };
 		C406A63A1D3AEED2008B5190 /* libRNGeocoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C42306C81D3AED0200EA92AB /* libRNGeocoder.a */; };
+		C47DEB121D4DCD800091A822 /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C47DEB021D4DCD5D0091A822 /* libRCTCameraRoll.a */; };
 		C485F6341D2C65FE005643BB /* Mapbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C485F6331D2C65FE005643BB /* Mapbox.framework */; };
 		C485F6351D2C65FF005643BB /* Mapbox.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C485F6331D2C65FE005643BB /* Mapbox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C485F6381D2C663D005643BB /* libRCTMapboxGL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C485F6301D2C65AE005643BB /* libRCTMapboxGL.a */; };
@@ -125,6 +126,13 @@
 			remoteGlobalIDString = BF8FCF941BFFB184000FCD37;
 			remoteInfo = RNGeocoder;
 		};
+		C47DEB011D4DCD5D0091A822 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C47DEAFB1D4DCD5C0091A822 /* RCTCameraRoll.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 58B5115D1A9E6B3D00147676;
+			remoteInfo = RCTCameraRoll;
+		};
 		C485F62F1D2C65AE005643BB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C485F62A1D2C65AE005643BB /* RCTMapboxGL.xcodeproj */;
@@ -216,6 +224,7 @@
 		B544DF283B76447FA78B08BA /* RCTCamera.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RCTCamera.xcodeproj"; sourceTree = "<group>"; };
 		B75AB575E5154541AEDA3564 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		C42306B41D3AED0200EA92AB /* RNGeocoder.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNGeocoder.xcodeproj; path = "../node_modules/react-native-geocoder/ios/RNGeocoder.xcodeproj"; sourceTree = "<group>"; };
+		C47DEAFB1D4DCD5C0091A822 /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
 		C485F62A1D2C65AE005643BB /* RCTMapboxGL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTMapboxGL.xcodeproj; path = "../node_modules/react-native-mapbox-gl/ios/RCTMapboxGL.xcodeproj"; sourceTree = "<group>"; };
 		C485F6331D2C65FE005643BB /* Mapbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Mapbox.framework; sourceTree = "<group>"; };
 		CE8507583D1F4E28A58032B6 /* libRCTMapboxGL.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTMapboxGL.a; sourceTree = "<group>"; };
@@ -237,6 +246,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C47DEB121D4DCD800091A822 /* libRCTCameraRoll.a in Frameworks */,
 				C406A63A1D3AEED2008B5190 /* libRNGeocoder.a in Frameworks */,
 				C485F6381D2C663D005643BB /* libRCTMapboxGL.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
@@ -365,6 +375,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				C47DEAFB1D4DCD5C0091A822 /* RCTCameraRoll.xcodeproj */,
 				C42306B41D3AED0200EA92AB /* RNGeocoder.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
@@ -434,6 +445,14 @@
 			isa = PBXGroup;
 			children = (
 				C42306C81D3AED0200EA92AB /* libRNGeocoder.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C47DEAFC1D4DCD5C0091A822 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C47DEB021D4DCD5D0091A822 /* libRCTCameraRoll.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -550,6 +569,10 @@
 				{
 					ProductGroup = C49AD60E1D2DE6B7008E2511 /* Products */;
 					ProjectRef = B544DF283B76447FA78B08BA /* RCTCamera.xcodeproj */;
+				},
+				{
+					ProductGroup = C47DEAFC1D4DCD5C0091A822 /* Products */;
+					ProjectRef = C47DEAFB1D4DCD5C0091A822 /* RCTCameraRoll.xcodeproj */;
 				},
 				{
 					ProductGroup = 00C302B61ABCB90400DB3ED1 /* Products */;
@@ -688,6 +711,13 @@
 			fileType = archive.ar;
 			path = libRNGeocoder.a;
 			remoteRef = C42306C71D3AED0200EA92AB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C47DEB021D4DCD5D0091A822 /* libRCTCameraRoll.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTCameraRoll.a;
+			remoteRef = C47DEB011D4DCD5D0091A822 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		C485F6301D2C65AE005643BB /* libRCTMapboxGL.a */ = {

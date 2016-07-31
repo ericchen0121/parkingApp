@@ -286,6 +286,8 @@ var Main = React.createClass({
     });
   },
 
+  // photo component uses the this.props.callback to pass the photo url to this component
+
   _takePhoto(){
     this.props.navigator.push({ 
       component: Photo,

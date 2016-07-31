@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+  CameraRoll,
   Dimensions,
   StyleSheet,
   Text,
@@ -27,6 +28,7 @@ class Photo extends Component {
           captureAudio={false}
           captureMode={Camera.constants.CaptureMode.still}
           captureTarget={Camera.constants.CaptureTarget.disk}
+          flashMode={Camera.constants.FlashMode.on}
           >
           
         </Camera>
@@ -47,8 +49,13 @@ class Photo extends Component {
       .then((data) => {
         // send photo path back to the original screen with callback
         // http://stackoverflow.com/questions/29463592/react-native-pass-properties-on-navigator-pop
-        // 
         this.props.callback(data.path);
+
+        // // also save to Camera Roll
+        CameraRoll.saveImageWithTag(data.path) 
+          .then((data) => { console.log(data) })
+          .catch((err) => { console.error(err) })
+
         this.props.navigator.pop();
       })
       .catch(err => console.error(err));
