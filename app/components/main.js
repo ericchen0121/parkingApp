@@ -227,7 +227,7 @@ var Main = React.createClass({
         this.addAnnotations(mapRef, [{
           coordinates: [location.latitude, location.longitude],
           type: 'point', 
-          title: 'parqed', 
+          title: 'You parked here', 
           subtitle: "on " + this.state.time.toLocaleString(),
           id: 'parking1'
         }])
@@ -383,7 +383,7 @@ var Main = React.createClass({
             this._storeLocationNotes(notes);
           }}
           value={this.state.notes}
-          placeholder='parqing notes'
+          placeholder='parking notes'
         />
       </View>
     )
@@ -554,13 +554,13 @@ var styles = StyleSheet.create({
     height: 50, 
     backgroundColor: 'rgba(52,52,52,0)',
     position: 'absolute', 
-    top: 30, 
+    top: 75, 
     left: 20, 
     borderRadius: 5
   }, 
   buttonPhotoTakenContainer: {  
     position: 'absolute', 
-    top: 80, 
+    top: 125, 
     left: 20, 
     height: 50, 
     width: 50,
@@ -615,7 +615,7 @@ var styles = StyleSheet.create({
   }, 
   notes: {
     position: 'absolute', 
-    top: 30,
+    top: 75,
     left: 80,
     right: 55, 
     backgroundColor: 'white'
@@ -627,14 +627,14 @@ var styles = StyleSheet.create({
   },
   parkingStatus: {
     position: 'absolute', 
-    top: 80,
-    left: 80,
-    right: 55, 
+    top: 10,
+    left: 0,
+    right: 0, 
     backgroundColor: 'rgba(14,100,60,0.55)',
     borderRadius: 2, 
     paddingLeft: 10, 
-    paddingTop: 3,
-    paddingBottom: 3
+    paddingTop: 10,
+    paddingBottom: 10
   }, 
   parkingStatusText: {
     fontSize: 13,

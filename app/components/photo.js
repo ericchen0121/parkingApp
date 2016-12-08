@@ -28,7 +28,6 @@ class Photo extends Component {
           captureAudio={false}
           captureMode={Camera.constants.CaptureMode.still}
           captureTarget={Camera.constants.CaptureTarget.disk}
-          flashMode={Camera.constants.FlashMode.on}
           >
           
         </Camera>
