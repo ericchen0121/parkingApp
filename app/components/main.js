@@ -383,13 +383,13 @@ var Main = React.createClass({
             this._storeLocationNotes(notes);
           }}
           value={this.state.notes}
-          placeholder='parking notes'
+          placeholder='Add Parking Notes'
         />
       </View>
     )
   },
 //------------------
-// PARKING STATUS
+// PARKING STATUS - ADDRESS AND TIME PARKED
 //------------------
   _renderParkingStatus() {
     if(!this.state.parked) return;
@@ -551,12 +551,12 @@ var styles = StyleSheet.create({
     borderRadius: 10
   }, 
   cameraButton: {
+    top: 85, 
+    left: 20, 
+    borderRadius: 5,
     height: 50, 
     backgroundColor: 'rgba(52,52,52,0)',
-    position: 'absolute', 
-    top: 75, 
-    left: 20, 
-    borderRadius: 5
+    position: 'absolute'
   }, 
   buttonPhotoTakenContainer: {  
     position: 'absolute', 
@@ -613,9 +613,21 @@ var styles = StyleSheet.create({
     bottom: 146, 
     left: 16.5,
   }, 
+  centerMarkerButtonStack: {
+    backgroundColor: 'rgba(52,52,52,0)',
+    position: 'absolute',
+    bottom: 218,
+    left: 16.5,
+  },
+  centerMarkerButton: {
+    backgroundColor: 'rgba(52,52,52,0)',
+    position: 'absolute', 
+    bottom: 227, 
+    left: 30
+  },
   notes: {
     position: 'absolute', 
-    top: 75,
+    top: 85,
     left: 80,
     right: 55, 
     backgroundColor: 'white'
@@ -630,31 +642,21 @@ var styles = StyleSheet.create({
     top: 10,
     left: 0,
     right: 0, 
-    backgroundColor: 'rgba(14,100,60,0.55)',
+    // backgroundColor: 'rgba(14,100,60,0.55)', // teal color
+    backgroundColor: 'white',
     borderRadius: 2, 
-    paddingLeft: 10, 
+    paddingLeft: 20, 
     paddingTop: 10,
-    paddingBottom: 10
+    paddingBottom: 20
   }, 
   parkingStatusText: {
     fontSize: 13,
-    color: 'white', 
+    color: 'black', 
   }, 
   parkingStatusBigText: {
-    fontSize: 17,
-    color: 'white', 
-  }, 
-  centerMarkerButtonStack: {
-    backgroundColor: 'rgba(52,52,52,0)',
-    position: 'absolute', 
-    bottom: 146, 
-    left: 76.5,
-  }, 
-  centerMarkerButton: {
-    backgroundColor: 'rgba(52,52,52,0)',
-    position: 'absolute', 
-    bottom: 155, 
-    left: 90
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: 'black', 
   }
 });
 
